@@ -18,11 +18,11 @@
         .container {
             max-width: 600px;
             margin: 0 auto;
+            text-align: center;
         }
         
         h1 {
             color: var(--tg-theme-text-color, #000000);
-            text-align: center;
             margin-bottom: 30px;
         }
         
@@ -50,7 +50,7 @@
             opacity: 0.9;
         }
         
-        .user-info {
+        .welcome {
             background: var(--tg-theme-section-bg-color, #f8f8f8);
             padding: 15px;
             border-radius: 8px;
@@ -60,25 +60,25 @@
 </head>
 <body>
     <div class="container">
-        <h1>🚀 My Channel App</h1>
+        <h1>🚀 Welcome to Our App!</h1>
         
-        <div class="user-info" id="user-info">
-            <strong>User Info will appear here</strong>
+        <div class="welcome">
+            <h3>Hello! 👋</h3>
+            <p>Welcome to our channel's interactive application.</p>
         </div>
         
         <div class="card">
-            <h3>Welcome to our App!</h3>
+            <h3>Features</h3>
             <p>This is a simple web app running inside your Telegram channel.</p>
         </div>
         
-        <button onclick="showAlert()">Show Alert</button>
-        <button onclick="changeBackground()">Change Background</button>
-        <button onclick="sendDataToBot()">Send Data to Bot</button>
+        <button onclick="showAlert()">Click Me!</button>
+        <button onclick="changeBackground()">Change Theme</button>
         <button onclick="closeApp()">Close App</button>
         
-        <div class="card" id="dynamic-content">
-            <h3>Dynamic Content</h3>
-            <p>This content can be updated dynamically.</p>
+        <div class="card">
+            <h3>Channel App</h3>
+            <p>Enjoy using our application!</p>
         </div>
     </div>
 
@@ -89,15 +89,7 @@
         // Expand the app to full height
         tg.expand();
         
-        // Show user information
-        const user = tg.initDataUnsafe?.user;
-        if (user) {
-            document.getElementById('user-info').innerHTML = `
-                <strong>Welcome, ${user.first_name || 'User'}!</strong><br>
-                Username: @${user.username || 'N/A'}<br>
-                User ID: ${user.id}
-            `;
-        }
+        // REMOVED: User info display - no personal data shown
         
         // Set theme colors
         document.body.style.backgroundColor = tg.themeParams.bg_color || '#ffffff';
@@ -105,23 +97,13 @@
         
         // Function examples
         function showAlert() {
-            alert('Hello from your Telegram Web App!');
+            alert('Welcome to our channel app!');
         }
         
         function changeBackground() {
             const colors = ['#ff6b6b', '#48dbfb', '#1dd1a1', '#f368e0', '#ff9ff3'];
             const randomColor = colors[Math.floor(Math.random() * colors.length)];
             document.body.style.backgroundColor = randomColor;
-        }
-        
-        function sendDataToBot() {
-            // This sends data back to your bot
-            tg.sendData(JSON.stringify({
-                action: 'button_click',
-                button: 'send_data',
-                timestamp: new Date().toISOString()
-            }));
-            alert('Data sent to bot!');
         }
         
         function closeApp() {
