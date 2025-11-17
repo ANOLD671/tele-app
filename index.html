@@ -56,20 +56,121 @@
             border-radius: 8px;
             margin-bottom: 20px;
         }
+
+        /* 🆕 ADDED: Live Matches Styles */
+        .matches-section {
+            display: none;
+            text-align: left;
+        }
+        
+        .match-card {
+            background: var(--tg-theme-secondary-bg-color, #f0f0f0);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid #e50914;
+        }
+        
+        .match-card:hover {
+            opacity: 0.8;
+            transform: translateX(5px);
+        }
+        
+        .match-status {
+            font-size: 12px;
+            color: #4CAF50;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .match-score {
+            font-size: 18px;
+            font-weight: bold;
+            text-align: center;
+            margin: 10px 0;
+        }
+        
+        .teams-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .team {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 40%;
+        }
+        
+        .team-logo {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-bottom: 5px;
+            background: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+        }
+        
+        .team-name {
+            font-size: 12px;
+            text-align: center;
+        }
+        
+        .vs {
+            font-size: 12px;
+            color: #888;
+        }
+        
+        .match-league {
+            font-size: 11px;
+            color: #888;
+            text-align: center;
+            margin-top: 5px;
+        }
+        
+        .stream-container {
+            display: none;
+            width: 100%;
+            height: 300px;
+            margin: 20px 0;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        
+        .stream-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+        
+        .back-btn {
+            background: #666;
+            margin-bottom: 15px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚀 Welcome to Our App!</h1>
+        <h1>🚀 Welcome to Live Matches!</h1>
         
         <div class="welcome">
             <h3>Hello! 👋</h3>
-            <p>Welcome to our channel's interactive application.</p>
+            <p>Watch live football matches directly in Telegram</p>
         </div>
+        
+        <!-- 🆕 ADDED: Live Matches Menu Button -->
+        <button onclick="showLiveMatches()">📺 Watch Live Matches</button>
         
         <div class="card">
             <h3>Features</h3>
-            <p>This is a simple web app running inside your Telegram channel.</p>
+            <p>Live football streaming • Real-time scores • Multiple streams</p>
         </div>
         
         <button onclick="showAlert()">Click Me!</button>
@@ -78,7 +179,26 @@
         
         <div class="card">
             <h3>Channel App</h3>
-            <p>Enjoy using our application!</p>
+            <p>Enjoy live football matches!</p>
+        </div>
+
+        <!-- 🆕 ADDED: Live Matches Section -->
+        <div id="matchesSection" class="matches-section">
+            <button class="back-btn" onclick="hideLiveMatches()">← Back to Menu</button>
+            <h3>⚽ Live Matches</h3>
+            <div id="matchesList">Loading matches...</div>
+            
+            <h3>📺 TV Channels</h3>
+            <div id="channelsList">Loading channels...</div>
+            
+            <div class="stream-container" id="streamContainer">
+                <iframe id="streamFrame" class="stream-iframe" 
+                        allowfullscreen
+                        allow="autoplay; fullscreen"
+                        sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
+                        referrerpolicy="no-referrer-when-downgrade">
+                </iframe>
+            </div>
         </div>
     </div>
 
@@ -89,13 +209,127 @@
         // Expand the app to full height
         tg.expand();
         
-        // REMOVED: User info display - no personal data shown
-        
         // Set theme colors
         document.body.style.backgroundColor = tg.themeParams.bg_color || '#ffffff';
         document.body.style.color = tg.themeParams.text_color || '#000000';
         
-        // Function examples
+        // 🆕 ADDED: Live Matches Configuration
+        const CONFIG_URL = "https://raw.githubusercontent.com/ANOLD671/tv-config.json/refs/heads/main/tv-config.json";
+        const matchesList = document.getElementById("matchesList");
+        const channelsList = document.getElementById("channelsList");
+        const streamFrame = document.getElementById("streamFrame");
+        const streamContainer = document.getElementById("streamContainer");
+        const matchesSection = document.getElementById("matchesSection");
+
+        // 🆕 ADDED: Show/Hide Live Matches
+        function showLiveMatches() {
+            document.querySelector('.container').style.display = 'none';
+            matchesSection.style.display = 'block';
+            loadContent();
+        }
+
+        function hideLiveMatches() {
+            matchesSection.style.display = 'none';
+            document.querySelector('.container').style.display = 'block';
+            // Stop current stream
+            streamFrame.src = '';
+            streamContainer.style.display = 'none';
+        }
+
+        // 🆕 ADDED: Load Live Content
+        async function loadContent() {
+            try {
+                matchesList.innerHTML = '<div style="text-align: center; padding: 10px;">🔄 Loading matches...</div>';
+                channelsList.innerHTML = '<div style="text-align: center; padding: 10px;">🔄 Loading channels...</div>';
+                
+                const res = await fetch(CONFIG_URL + '?t=' + new Date().getTime());
+                const data = await res.json();
+
+                // Load Matches
+                if (data.matches && data.matches.length > 0) {
+                    matchesList.innerHTML = "";
+                    data.matches.forEach(match => {
+                        const matchCard = document.createElement("div");
+                        matchCard.className = `match-card ${match.status === 'finished' ? 'finished' : ''}`;
+                        
+                        matchCard.innerHTML = `
+                            <div class="match-status">
+                                ${match.status === 'running' ? '🔴 LIVE' : '⚫ FINISHED'} • ${match.league}
+                            </div>
+                            <div class="match-score">${match.score}</div>
+                            <div class="teams-container">
+                                <div class="team">
+                                    <div class="team-logo">
+                                        ${match.team1.logo ? `<img src="${match.team1.logo}" alt="${match.team1.name}" style="width: 100%; height: 100%; border-radius: 50%;">` : '⚽'}
+                                    </div>
+                                    <div class="team-name">${match.team1.name}</div>
+                                </div>
+                                <div class="vs">VS</div>
+                                <div class="team">
+                                    <div class="team-logo">
+                                        ${match.team2.logo ? `<img src="${match.team2.logo}" alt="${match.team2.name}" style="width: 100%; height: 100%; border-radius: 50%;">` : '⚽'}
+                                    </div>
+                                    <div class="team-name">${match.team2.name}</div>
+                                </div>
+                            </div>
+                            <div class="match-league">${match.league}</div>
+                        `;
+                        
+                        matchCard.onclick = () => {
+                            if (match.stream_url) {
+                                streamFrame.src = match.stream_url;
+                                streamContainer.style.display = 'block';
+                                // Scroll to stream
+                                streamContainer.scrollIntoView({ behavior: 'smooth' });
+                                // Telegram haptic feedback
+                                tg.HapticFeedback.impactOccurred('medium');
+                            }
+                        };
+                        
+                        matchesList.appendChild(matchCard);
+                    });
+                } else {
+                    matchesList.innerHTML = '<div style="text-align: center; padding: 10px; color: #888;">No live matches available</div>';
+                }
+
+                // Load Channels
+                if (data.channels && data.channels.length > 0) {
+                    channelsList.innerHTML = "";
+                    data.channels.forEach(channel => {
+                        const btn = document.createElement("button");
+                        btn.className = "channel-btn";
+                        btn.textContent = `📺 ${channel.name}`;
+                        btn.onclick = () => {
+                            if (channel.url) {
+                                streamFrame.src = channel.url;
+                                streamContainer.style.display = 'block';
+                                // Scroll to stream
+                                streamContainer.scrollIntoView({ behavior: 'smooth' });
+                                // Telegram haptic feedback
+                                tg.HapticFeedback.impactOccurred('medium');
+                            }
+                        };
+                        channelsList.appendChild(btn);
+                    });
+                } else {
+                    channelsList.innerHTML = '<div style="text-align: center; padding: 10px; color: #888;">No channels available</div>';
+                }
+
+            } catch (err) {
+                matchesList.innerHTML = '<div style="text-align: center; padding: 10px; color: #ff4444;">⚠️ Failed to load content</div>';
+                channelsList.innerHTML = '';
+                console.error(err);
+            }
+        }
+
+        // 🆕 ADDED: Auto-refresh matches every 5 minutes
+        setInterval(() => {
+            if (matchesSection.style.display === 'block') {
+                loadContent();
+            }
+        }, 300000);
+
+        // Original Functions (unchanged)
         function showAlert() {
             alert('Welcome to our channel app!');
         }
