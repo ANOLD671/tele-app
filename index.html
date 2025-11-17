@@ -142,6 +142,7 @@
             margin: 20px 0;
             border-radius: 8px;
             overflow: hidden;
+            background: #000;
         }
         
         .stream-iframe {
@@ -153,6 +154,42 @@
         .back-btn {
             background: #666;
             margin-bottom: 15px;
+        }
+
+        .channel-btn {
+            background: var(--tg-theme-button-color, #2481cc);
+            color: var(--tg-theme-button-text-color, #ffffff);
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin: 5px 0;
+            text-align: left;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #888;
+        }
+
+        .error-message {
+            text-align: center;
+            padding: 20px;
+            color: #ff4444;
+            background: #ffeaea;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+
+        .stream-info {
+            text-align: center;
+            padding: 10px;
+            background: #f0f0f0;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 14px;
         }
     </style>
 </head>
@@ -192,11 +229,13 @@
             <div id="channelsList">Loading channels...</div>
             
             <div class="stream-container" id="streamContainer">
+                <div class="stream-info" id="streamInfo">Select a match or channel to start streaming</div>
                 <iframe id="streamFrame" class="stream-iframe" 
                         allowfullscreen
-                        allow="autoplay; fullscreen"
+                        allow="autoplay; fullscreen; encrypted-media"
                         sandbox="allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox"
-                        referrerpolicy="no-referrer-when-downgrade">
+                        referrerpolicy="no-referrer-when-downgrade"
+                        style="display: none;">
                 </iframe>
             </div>
         </div>
@@ -220,6 +259,7 @@
         const streamFrame = document.getElementById("streamFrame");
         const streamContainer = document.getElementById("streamContainer");
         const matchesSection = document.getElementById("matchesSection");
+        const streamInfo = document.getElementById("streamInfo");
 
         // 🆕 ADDED: Show/Hide Live Matches
         function showLiveMatches() {
@@ -232,15 +272,49 @@
             matchesSection.style.display = 'none';
             document.querySelector('.container').style.display = 'block';
             // Stop current stream
+            stopStream();
+        }
+
+        function stopStream() {
             streamFrame.src = '';
+            streamFrame.style.display = 'none';
+            streamInfo.style.display = 'block';
+            streamInfo.textContent = 'Select a match or channel to start streaming';
             streamContainer.style.display = 'none';
+        }
+
+        // 🆕 ADDED: Enhanced Stream Loading
+        function loadStream(url, title) {
+            streamInfo.textContent = `Loading: ${title}...`;
+            streamInfo.style.display = 'block';
+            streamFrame.style.display = 'none';
+            streamContainer.style.display = 'block';
+            
+            // Enhanced iframe settings for better compatibility
+            streamFrame.sandbox = "allow-scripts allow-same-origin allow-forms allow-popups allow-popups-to-escape-sandbox allow-presentation";
+            streamFrame.allow = "autoplay; fullscreen; encrypted-media; picture-in-picture";
+            streamFrame.referrerPolicy = "no-referrer-when-downgrade";
+            
+            streamFrame.src = url;
+            
+            // Show stream after a short delay
+            setTimeout(() => {
+                streamInfo.style.display = 'none';
+                streamFrame.style.display = 'block';
+            }, 2000);
+            
+            // Telegram haptic feedback
+            tg.HapticFeedback.impactOccurred('medium');
+            
+            // Scroll to stream
+            streamContainer.scrollIntoView({ behavior: 'smooth' });
         }
 
         // 🆕 ADDED: Load Live Content
         async function loadContent() {
             try {
-                matchesList.innerHTML = '<div style="text-align: center; padding: 10px;">🔄 Loading matches...</div>';
-                channelsList.innerHTML = '<div style="text-align: center; padding: 10px;">🔄 Loading channels...</div>';
+                matchesList.innerHTML = '<div class="loading">🔄 Loading matches...</div>';
+                channelsList.innerHTML = '<div class="loading">🔄 Loading channels...</div>';
                 
                 const res = await fetch(CONFIG_URL + '?t=' + new Date().getTime());
                 const data = await res.json();
@@ -256,7 +330,7 @@
                             <div class="match-status">
                                 ${match.status === 'running' ? '🔴 LIVE' : '⚫ FINISHED'} • ${match.league}
                             </div>
-                            <div class="match-score">${match.score}</div>
+                            <div class="match-score">${match.score || 'VS'}</div>
                             <div class="teams-container">
                                 <div class="team">
                                     <div class="team-logo">
@@ -277,19 +351,14 @@
                         
                         matchCard.onclick = () => {
                             if (match.stream_url) {
-                                streamFrame.src = match.stream_url;
-                                streamContainer.style.display = 'block';
-                                // Scroll to stream
-                                streamContainer.scrollIntoView({ behavior: 'smooth' });
-                                // Telegram haptic feedback
-                                tg.HapticFeedback.impactOccurred('medium');
+                                loadStream(match.stream_url, `${match.team1.name} vs ${match.team2.name}`);
                             }
                         };
                         
                         matchesList.appendChild(matchCard);
                     });
                 } else {
-                    matchesList.innerHTML = '<div style="text-align: center; padding: 10px; color: #888;">No live matches available</div>';
+                    matchesList.innerHTML = '<div class="loading">No live matches available</div>';
                 }
 
                 // Load Channels
@@ -298,29 +367,36 @@
                     data.channels.forEach(channel => {
                         const btn = document.createElement("button");
                         btn.className = "channel-btn";
-                        btn.textContent = `📺 ${channel.name}`;
+                        btn.innerHTML = `📺 ${channel.name}`;
                         btn.onclick = () => {
                             if (channel.url) {
-                                streamFrame.src = channel.url;
-                                streamContainer.style.display = 'block';
-                                // Scroll to stream
-                                streamContainer.scrollIntoView({ behavior: 'smooth' });
-                                // Telegram haptic feedback
-                                tg.HapticFeedback.impactOccurred('medium');
+                                loadStream(channel.url, channel.name);
                             }
                         };
                         channelsList.appendChild(btn);
                     });
                 } else {
-                    channelsList.innerHTML = '<div style="text-align: center; padding: 10px; color: #888;">No channels available</div>';
+                    channelsList.innerHTML = '<div class="loading">No channels available</div>';
                 }
 
             } catch (err) {
-                matchesList.innerHTML = '<div style="text-align: center; padding: 10px; color: #ff4444;">⚠️ Failed to load content</div>';
-                channelsList.innerHTML = '';
+                matchesList.innerHTML = '<div class="error-message">⚠️ Failed to load content</div>';
+                channelsList.innerHTML = '<div class="error-message">⚠️ Network error</div>';
                 console.error(err);
             }
         }
+
+        // 🆕 ADDED: Handle iframe errors
+        streamFrame.addEventListener('error', function() {
+            streamInfo.style.display = 'block';
+            streamFrame.style.display = 'none';
+            streamInfo.innerHTML = '❌ Stream failed to load<br><small>Try selecting another stream</small>';
+        });
+
+        streamFrame.addEventListener('load', function() {
+            // Stream loaded successfully
+            console.log('Stream loaded successfully');
+        });
 
         // 🆕 ADDED: Auto-refresh matches every 5 minutes
         setInterval(() => {
