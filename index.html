@@ -1,17 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Live Sports Channels</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-        
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
@@ -21,29 +17,26 @@
             min-height: 100vh;
             transition: background 0.5s ease;
         }
-        
-        .container {
-            max-width: 600px;
-            margin: 0 auto;
-        }
-        
+
+        .container { max-width: 600px; margin: 0 auto; }
+
         h1 {
             color: #ffffff;
             margin-bottom: 30px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
             text-align: center;
         }
-        
+
         .card {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.08);
             border-radius: 12px;
             padding: 20px;
             margin-bottom: 15px;
             box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255,255,255,0.06);
         }
-        
+
         button {
             background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
             color: #ffffff;
@@ -55,43 +48,38 @@
             cursor: pointer;
             width: 100%;
             margin: 8px 0;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.25s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.12);
         }
-        
-        button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.2);
-        }
-        
+
+        button:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.18); }
+
         .welcome {
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.04);
             padding: 20px;
             border-radius: 12px;
             margin-bottom: 20px;
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
             text-align: center;
         }
 
         .channel-video-container {
             margin: 25px 0;
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(255,255,255,0.03);
             border-radius: 12px;
             padding: 15px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
-        
+
         .channel-title {
             font-size: 18px;
-            font-weight: bold;
+            font-weight: 700;
             margin-bottom: 15px;
             color: #ffffff;
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        
+
         .channel-video {
             width: 100%;
             height: 250px;
@@ -100,7 +88,7 @@
             background: #000;
             position: relative;
         }
-        
+
         .video-placeholder {
             width: 100%;
             height: 100%;
@@ -112,227 +100,141 @@
             color: #fff;
             font-size: 16px;
         }
-        
-        .video-error {
-            background: #2d1a1a;
-            color: #ff6b6b;
-        }
-        
-        .close-btn {
-            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-        }
 
-        .feature-list {
-            text-align: left;
-            margin-top: 10px;
-            padding-left: 20px;
-        }
-        
-        .feature-list li {
-            margin-bottom: 8px;
-        }
-        
-        .channel-icon {
-            font-size: 24px;
-        }
-        
-        .section-title {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 25px 0 15px;
-            font-size: 20px;
-        }
-        
-        .section-title::before,
-        .section-title::after {
-            content: "";
-            flex: 1;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.2);
-            margin: 0 15px;
-        }
-        
-        .status-indicator {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #4CAF50;
-            margin-right: 8px;
-            animation: pulse 2s infinite;
-        }
-        
+        .video-error { background: #2d1a1a; color: #ff6b6b; }
+
+        .channel-controls { display: flex; gap: 10px; margin-top: 10px; }
+
+        .channel-controls button { flex: 1; padding: 10px; font-size: 14px; width: auto; }
+
+        .fullscreen-btn { background: linear-gradient(135deg, #ff9a00 0%, #ff6a00 100%); }
+        .show-btn { background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%); }
+        .hide-btn { background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%); }
+        .close-btn { background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%); }
+
+        .status-indicator { display:inline-block; width:8px; height:8px; border-radius:50%; background:#4CAF50; margin-right:8px; animation:pulse 2s infinite; }
+
         .loading-spinner {
-            width: 40px;
-            height: 40px;
-            border: 4px solid rgba(255, 255, 255, 0.3);
+            width: 40px; height: 40px;
+            border: 4px solid rgba(255,255,255,0.25);
             border-radius: 50%;
             border-top-color: #2575fc;
-            animation: spin 1s ease-in-out infinite;
+            animation: spin 1s linear infinite;
             margin-bottom: 10px;
         }
-        
-        /* Fullscreen Styles */
-        .fullscreen-overlay {
+
+        .section-title {
+            display:flex; align-items:center; justify-content:center; margin:25px 0 15px; font-size:20px;
+        }
+        .section-title::before, .section-title::after {
+            content:""; flex:1; height:1px; background: rgba(255,255,255,0.12); margin:0 15px;
+        }
+
+        .hidden { display: none; }
+
+        @keyframes pulse { 0% { opacity: 1 } 50% { opacity: 0.5 } 100% { opacity: 1 } }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* ===== CUSTOM FULLSCREEN OVERLAY (works inside Telegram Android/iOS) ===== */
+        .custom-fullscreen {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
+            top: 0; left: 0;
+            width: 100vw; height: 100vh;
             background: #000;
-            z-index: 1000;
+            z-index: 99999;
             display: none;
             flex-direction: column;
+            align-items: stretch;
+            justify-content: center;
         }
-        
-        .fullscreen-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.8);
+
+        .custom-fullscreen .fs-header {
+            display:flex; align-items:center; justify-content:space-between;
+            padding: 12px 14px;
+            background: rgba(0,0,0,0.6);
         }
-        
-        .fullscreen-title {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        
-        .fullscreen-close {
-            background: #ff4757;
-            color: white;
+
+        .fs-title { font-size: 16px; font-weight: 700; color: #fff; }
+
+        .fs-close {
+            background: rgba(255,255,255,0.08);
             border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 20px;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 18px;
             cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
         }
-        
-        .fullscreen-video-container {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
-        
-        .fullscreen-video {
-            width: 100%;
-            height: 100%;
-            max-width: 100%;
+
+        .fs-video-wrap { flex: 1; display: flex; align-items:center; justify-content:center; padding: 12px; }
+        .fs-video {
+            width: 100%; height: 100%;
             max-height: 100%;
+            object-fit: contain;
+            background: #000;
         }
-        
-        .channel-controls {
-            display: flex;
-            gap: 10px;
-            margin-top: 10px;
-        }
-        
-        .channel-controls button {
-            flex: 1;
-            padding: 10px;
-            font-size: 14px;
-        }
-        
-        .fullscreen-btn {
-            background: linear-gradient(135deg, #ff9a00 0%, #ff6a00 100%);
-        }
-        
-        .show-btn {
-            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
-        }
-        
-        .hide-btn {
-            background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);
-        }
-        
-        .hidden {
-            display: none;
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.5; }
-            100% { opacity: 1; }
-        }
-        
-        @keyframes spin {
-            to { transform: rotate(360deg); }
+
+        /* small-screen adjustments */
+        @media (max-width:480px) {
+            body { padding: 12px; }
+            .channel-video { height: 200px; }
         }
     </style>
 </head>
 <body>
     <div class="container">
         <h1>⚽ Live Sports Channels</h1>
-        
-        <div class="welcome">
+
+        <div class="welcome card">
             <h3>Hello! 👋</h3>
             <p><span class="status-indicator"></span> All channels are live now</p>
         </div>
 
-        <!-- All Channels Section -->
         <div class="section-title">Live Channels</div>
-        
-        <div id="allChannelsContainer">
-            <!-- All channels with videos will be loaded here -->
-        </div>
+        <div id="allChannelsContainer"></div>
 
-        <!-- App Info Section -->
         <div class="card">
             <h3>Features</h3>
             <ul class="feature-list">
                 <li>Live sports streaming</li>
                 <li>Multiple channels</li>
                 <li>High quality video</li>
-                <li>Fullscreen support</li>
-                <li>Works in Telegram</li>
+                <li>Fullscreen support (custom overlay)</li>
+                <li>Works inside Telegram WebApp</li>
             </ul>
         </div>
-        
+
         <button onclick="showAlert()">ℹ️ App Info</button>
         <button onclick="changeBackground()">🎨 Change Theme</button>
         <button class="close-btn" onclick="closeApp()">❌ Close App</button>
-        
+
         <div class="card">
             <h3>About This App</h3>
             <p>Enjoy live sports channels directly in your Telegram app!</p>
         </div>
     </div>
 
-    <!-- Fullscreen Overlay -->
-    <div class="fullscreen-overlay" id="fullscreenOverlay">
-        <div class="fullscreen-header">
-            <div class="fullscreen-title" id="fullscreenTitle">Live Stream</div>
-            <button class="fullscreen-close" onclick="exitFullscreen()">✕</button>
+    <!-- CUSTOM FULLSCREEN OVERLAY (uses <video> element, not iframe) -->
+    <div id="customFullscreen" class="custom-fullscreen" role="dialog" aria-hidden="true">
+        <div class="fs-header">
+            <div class="fs-title" id="fsTitle">Live Stream</div>
+            <div>
+                <button class="fs-close" onclick="closeCustomFullscreen()">✕</button>
+            </div>
         </div>
-        <div class="fullscreen-video-container">
-            <iframe
-                id="fullscreenVideo"
-                class="fullscreen-video"
-                style="border: none;"
-                allow="clipboard-write; autoplay"
-                allowFullScreen
-            ></iframe>
+        <div class="fs-video-wrap">
+            <!-- Use <video> rather than iframe to allow in-overlay controls that Android won't block -->
+            <video id="fsVideo" class="fs-video" controls autoplay playsinline webkit-playsinline x5-playsinline></video>
         </div>
     </div>
 
     <script>
-        // Initialize Telegram Web App
-        let tg = window.Telegram.WebApp;
-        
-        // Expand the app to full height
-        if (tg && tg.expand) {
-            tg.expand();
-        }
-        
-        // Channels Configuration
-        const channelsList = [ 
+        // Telegram WebApp
+        const tg = window.Telegram && window.Telegram.WebApp ? window.Telegram.WebApp : null;
+        if (tg && tg.expand) tg.expand();
+
+        // Channels configuration (kept as provided)
+        const channelsList = [
             {
                 name: "SKY SPORTS PREMIER LEAGUE",
                 url: "https://river-1.rutube.ru/stream/genetta-503.ost.rutube.ru/f8J7qbReRhO1budHsggWXQ/1764329589/e5bacac3b8e730791d4cab20ae81cd8f/720p_stream.m3u8",
@@ -367,27 +269,25 @@
                 name: "MATCH TV",
                 url: "https://river-1.rutube.ru/stream/genetta-313.m9.rutube.ru/YY8CvazEaG3gGU1mB0oJvw/1764023362/11bbbec75a2ceb8cf446ad16813c6eec/1080p_stream.m3u8",
                 icon: "⚽"
-            },
+            }
         ];
 
-        // DOM Elements
-        const allChannelsContainer = document.getElementById("allChannelsContainer");
-        const fullscreenOverlay = document.getElementById("fullscreenOverlay");
-        const fullscreenVideo = document.getElementById("fullscreenVideo");
-        const fullscreenTitle = document.getElementById("fullscreenTitle");
+        const allChannelsContainer = document.getElementById('allChannelsContainer');
+        const customFullscreen = document.getElementById('customFullscreen');
+        const fsVideo = document.getElementById('fsVideo');
+        const fsTitle = document.getElementById('fsTitle');
 
-        // Track video states for each channel
+        // track state
         const videoStates = channelsList.map(() => ({ isVisible: false }));
 
-        // Load All Channels with their videos on page load
         function loadAllChannels() {
-            allChannelsContainer.innerHTML = "";
-            
+            allChannelsContainer.innerHTML = '';
+
             channelsList.forEach((channel, index) => {
-                const channelContainer = document.createElement("div");
-                channelContainer.className = "channel-video-container";
+                const channelContainer = document.createElement('div');
+                channelContainer.className = 'channel-video-container';
                 channelContainer.id = `channel-${index}`;
-                
+
                 channelContainer.innerHTML = `
                     <div class="channel-title">
                         <span class="channel-icon">${channel.icon}</span>
@@ -398,6 +298,7 @@
                             <div class="loading-spinner"></div>
                             <div>Loading stream...</div>
                         </div>
+                        <!-- keep iframe hidden by default (legacy); we'll prefer custom fullscreen overlay for Android -->
                         <iframe
                             id="video-${index}"
                             width="100%"
@@ -418,127 +319,149 @@
                         <button onclick="reloadVideo(${index})">🔄 Reload Stream</button>
                     </div>
                 `;
-                
+
                 allChannelsContainer.appendChild(channelContainer);
             });
         }
 
-        // Show video function
+        // Show / hide inline iframe (legacy)
         function showVideo(index) {
             const video = document.getElementById(`video-${index}`);
             const placeholder = document.getElementById(`placeholder-${index}`);
             const showBtn = document.getElementById(`show-btn-${index}`);
             const hideBtn = document.getElementById(`hide-btn-${index}`);
-            
+
             if (video && placeholder) {
                 video.classList.remove('hidden');
                 placeholder.classList.add('hidden');
                 videoStates[index].isVisible = true;
-                
-                // Update button visibility
                 showBtn.classList.add('hidden');
                 hideBtn.classList.remove('hidden');
             }
         }
 
-        // Hide video function
         function hideVideo(index) {
             const video = document.getElementById(`video-${index}`);
             const placeholder = document.getElementById(`placeholder-${index}`);
             const showBtn = document.getElementById(`show-btn-${index}`);
             const hideBtn = document.getElementById(`hide-btn-${index}`);
-            
+
             if (video && placeholder) {
                 video.classList.add('hidden');
                 placeholder.classList.remove('hidden');
                 videoStates[index].isVisible = false;
-                
-                // Update button visibility
                 showBtn.classList.remove('hidden');
                 hideBtn.classList.add('hidden');
             }
         }
 
-        // Enter fullscreen mode
+        // Enter custom fullscreen overlay (works inside Telegram on Android/iOS)
         function enterFullscreen(index) {
             const channel = channelsList[index];
             const videoUrl = channel.url;
-            
-            // Set fullscreen video source and title
-            fullscreenVideo.src = videoUrl;
-            fullscreenTitle.textContent = channel.name;
-            
-            // Show fullscreen overlay
-            fullscreenOverlay.style.display = 'flex';
-            
-            // Hide Telegram header in fullscreen if possible
-            if (tg && tg.showHeader) {
-                tg.showHeader(false);
+
+            // Set title
+            fsTitle.textContent = channel.name;
+
+            // Set video src to overlay video element and play
+            // We use <video> to avoid Telegram blocking native fullscreen on Android's embedded player
+            try {
+                // attempt to load the stream into the overlay player
+                fsVideo.src = videoUrl;
+                fsVideo.setAttribute('playsinline', '');
+                fsVideo.setAttribute('webkit-playsinline', '');
+                fsVideo.setAttribute('x5-playsinline', '');
+                // show overlay
+                customFullscreen.style.display = 'flex';
+                customFullscreen.setAttribute('aria-hidden', 'false');
+
+                // hide Telegram header if available
+                if (tg && tg.showHeader) {
+                    try { tg.showHeader(false); } catch (e) { /* ignore */ }
+                }
+
+                // lock orientation if available
+                lockOrientation();
+
+                // try to play (some platforms require a user gesture; clicking the fullscreen button is a gesture)
+                const playPromise = fsVideo.play();
+                if (playPromise && playPromise.catch) {
+                    playPromise.catch(err => {
+                        // Play failed (autoplay policy) — keep overlay visible; user can press play
+                        console.log('Autoplay prevented, waiting for user interaction:', err);
+                    });
+                }
+            } catch (err) {
+                console.error('Failed to open custom fullscreen:', err);
+                // fallback: open in external browser
+                tryOpenExternal(videoUrl);
             }
-            
-            // Lock orientation if possible
-            lockOrientation();
         }
 
-        // Exit fullscreen mode
-        function exitFullscreen() {
-            // Hide fullscreen overlay
-            fullscreenOverlay.style.display = 'none';
-            
-            // Stop the video
-            fullscreenVideo.src = '';
-            
-            // Show Telegram header again
+        // Close overlay
+        function closeCustomFullscreen() {
+            // pause and unload
+            try {
+                fsVideo.pause();
+                fsVideo.removeAttribute('src');
+                fsVideo.load && fsVideo.load();
+            } catch (e) { /* ignore */ }
+
+            customFullscreen.style.display = 'none';
+            customFullscreen.setAttribute('aria-hidden', 'true');
+
+            // restore Telegram header if available
             if (tg && tg.showHeader) {
-                tg.showHeader(true);
+                try { tg.showHeader(true); } catch (e) { /* ignore */ }
             }
-            
-            // Unlock orientation
+
+            // unlock orientation
             unlockOrientation();
         }
 
-        // Lock screen orientation to landscape for fullscreen
+        // Fallback to open stream in external browser (useful on Android if WebApp blocks playback)
+        function tryOpenExternal(url) {
+            try {
+                // open in new tab/window - Telegram on Android will likely hand off to system browser
+                window.open(url, '_blank');
+            } catch (e) {
+                alert('Unable to open stream externally. Please copy the URL and open it in your browser.');
+            }
+        }
+
         function lockOrientation() {
-            if (screen.orientation && screen.orientation.lock) {
+            if (screen && screen.orientation && screen.orientation.lock) {
                 screen.orientation.lock('landscape').catch(error => {
-                    console.log('Orientation lock not supported:', error);
+                    // not critical
+                    console.log('Orientation lock not supported or denied:', error);
                 });
             }
         }
 
-        // Unlock screen orientation
         function unlockOrientation() {
-            if (screen.orientation && screen.orientation.unlock) {
-                screen.orientation.unlock();
+            if (screen && screen.orientation && screen.orientation.unlock) {
+                try {
+                    screen.orientation.unlock();
+                } catch (e) { /* ignore */ }
             }
         }
 
-        // Handle video load event
+        // handle iframe load / error (legacy inline iframe)
         function handleVideoLoad(index) {
             const placeholder = document.getElementById(`placeholder-${index}`);
             const video = document.getElementById(`video-${index}`);
-            
-            if (placeholder) {
-                placeholder.classList.add('hidden');
-            }
+            if (placeholder) placeholder.classList.add('hidden');
             if (video) {
                 video.classList.remove('hidden');
                 videoStates[index].isVisible = true;
-                
-                // Update button visibility
                 const showBtn = document.getElementById(`show-btn-${index}`);
                 const hideBtn = document.getElementById(`hide-btn-${index}`);
-                if (showBtn && hideBtn) {
-                    showBtn.classList.add('hidden');
-                    hideBtn.classList.remove('hidden');
-                }
+                if (showBtn && hideBtn) { showBtn.classList.add('hidden'); hideBtn.classList.remove('hidden'); }
             }
         }
 
-        // Handle video error event
         function handleVideoError(index) {
             const placeholder = document.getElementById(`placeholder-${index}`);
-            
             if (placeholder) {
                 placeholder.innerHTML = `
                     <div>❌ Stream Error</div>
@@ -548,15 +471,13 @@
             }
         }
 
-        // Reload video stream
         function reloadVideo(index) {
             const video = document.getElementById(`video-${index}`);
             const placeholder = document.getElementById(`placeholder-${index}`);
             const showBtn = document.getElementById(`show-btn-${index}`);
             const hideBtn = document.getElementById(`hide-btn-${index}`);
-            
+
             if (video && placeholder) {
-                // Reset placeholder
                 placeholder.innerHTML = `
                     <div class="loading-spinner"></div>
                     <div>Reloading stream...</div>
@@ -564,56 +485,89 @@
                 placeholder.classList.remove('video-error');
                 placeholder.classList.remove('hidden');
                 video.classList.add('hidden');
-                
-                // Reset button states
-                showBtn.classList.remove('hidden');
-                hideBtn.classList.add('hidden');
+
+                // reset buttons
+                showBtn && showBtn.classList.remove('hidden');
+                hideBtn && hideBtn.classList.add('hidden');
                 videoStates[index].isVisible = false;
-                
-                // Force reload by updating src
+
+                // force reload
                 const currentSrc = video.src;
                 video.src = '';
-                setTimeout(() => {
-                    video.src = currentSrc;
-                }, 100);
+                setTimeout(() => { video.src = currentSrc; }, 150);
             }
         }
 
-        // Handle escape key to exit fullscreen
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape' && fullscreenOverlay.style.display === 'flex') {
-                exitFullscreen();
-            }
-        });
-
-        // Original Functions
+        // Original helper functions
         function showAlert() {
             alert('Welcome to Live Sports Channels!\n\nThis app lets you watch live sports channels directly in Telegram.\n\nUse the "Fullscreen" button for the best viewing experience!');
         }
-        
+
         function changeBackground() {
             const colors = ['#1a1a2e', '#16213e', '#0f3460', '#533483', '#2d4059', '#1b262c'];
-            const randomColor = colors[Math.floor(Math.random() * colors.length)];
-            document.body.style.backgroundColor = randomColor;
+            document.body.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
         }
-        
+
         function closeApp() {
-            if (tg && tg.close) {
-                tg.close();
-            } else {
-                alert('App would close now. In a real Telegram Web App, this would close the application.');
-            }
+            if (tg && tg.close) { try { tg.close(); } catch (e) { alert('Close failed'); } }
+            else alert('App would close now. In a real Telegram Web App, this would close the application.');
         }
-        
-        // Initialize the app
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load all channels immediately
-            loadAllChannels();
-            
-            // Notify Telegram that the app is ready
-            if (tg && tg.ready) {
-                tg.ready();
+
+        // Keyboard / back handling
+        document.addEventListener('keydown', function(event) {
+            // ESC closes custom fullscreen
+            if (event.key === 'Escape' && customFullscreen.style.display === 'flex') {
+                closeCustomFullscreen();
             }
+        });
+
+        // Android back button inside WebView: try to close overlay when back pressed (popstate trick)
+        window.addEventListener('popstate', function (event) {
+            if (customFullscreen.style.display === 'flex') {
+                closeCustomFullscreen();
+                // push state back so next back will behave normally
+                history.pushState({fs: true}, '');
+            }
+        });
+
+        // When opening custom fullscreen push history state (so Android back can close)
+        function pushFsState() {
+            try {
+                history.pushState({fs:true}, '');
+            } catch (e) { /* ignore */ }
+        }
+
+        // Attach event to show history state whenever overlay opens
+        (function attachFsHistoryHook() {
+            const observer = new MutationObserver(function() {
+                if (customFullscreen.style.display === 'flex') pushFsState();
+            });
+            observer.observe(customFullscreen, { attributes: true, attributeFilter: ['style'] });
+        })();
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllChannels();
+            if (tg && tg.ready) { try { tg.ready(); } catch(e) { /* ignore */ } }
+        });
+
+        // Accessibility: if user taps video area while overlay is visible but playback didn't start, show message
+        fsVideo.addEventListener('error', function(e) {
+            console.log('Playback error:', e);
+            // small hint for user to open externally if errors persist
+            // (we don't show an intrusive alert automatically)
+        });
+
+        // If user double-taps overlay video area, toggle controls visibility (optional UX)
+        let lastTap = 0;
+        fsVideo.addEventListener('touchend', function(e) {
+            const currentTime = new Date().getTime();
+            const tapLength = currentTime - lastTap;
+            if (tapLength < 300 && tapLength > 0) {
+                // double tap: toggle fullscreen close / UI (we simply toggle controls)
+                fsVideo.controls = !fsVideo.controls;
+            }
+            lastTap = currentTime;
         });
     </script>
 </body>
