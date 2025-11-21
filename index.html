@@ -346,6 +346,25 @@
             margin-top: 10px;
             text-align: center;
         }
+
+        .browser-warning {
+            background: rgba(255, 193, 7, 0.2);
+            border: 1px solid rgba(255, 193, 7, 0.5);
+            border-radius: 8px;
+            padding: 10px;
+            margin: 10px 0;
+            font-size: 12px;
+        }
+
+        /* Android Laptops info */
+        .android-laptops-info {
+            background: rgba(102, 126, 234, 0.2);
+            border: 1px solid rgba(102, 126, 234, 0.5);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            text-align: center;
+        }
     </style>
 </head>
 <body class="no-context" oncontextmenu="return false">
@@ -386,7 +405,13 @@
                         🤖 @streamer671_bot
                     </button>
                 </div>
-                <p class="info-note">💡 Use "Android & Laptops" button for fullscreen support</p>
+                <div class="android-laptops-info">
+                    <strong>🚀 Android & Laptops Version</strong>
+                    <p style="margin: 5px 0; font-size: 14px;">For fullscreen support and enhanced features</p>
+                    <button class="android-laptop-btn" onclick="openAndroidLaptops()" style="margin: 5px 0;">
+                        📱💻 Android & Laptops
+                    </button>
+                </div>
             </div>
 
             <!-- All Channels Section -->
@@ -400,14 +425,26 @@
             <div class="card">
                 <h3>Features</h3>
                 <ul class="feature-list">
-                    <li>Live sports streaming</li>
+                    <li>Live sports streaming via iframe</li>
                     <li>Multiple channels</li>
                     <li>High quality video</li>
-                    <li>Fullscreen support in Telegram Browser</li>
-                    <li>Android & Laptop optimized</li>
+                    <li>Android & Laptops version available</li>
+                    <li>Fullscreen support</li>
                     <li>Secure Telegram-only access</li>
                     <li>Powered by @streamer671_bot</li>
                 </ul>
+            </div>
+
+            <!-- Android & Laptops Button Section -->
+            <div class="card">
+                <h3>🚀 Android & Laptops Version</h3>
+                <p>For the complete experience with fullscreen support and enhanced features:</p>
+                <button class="android-laptop-btn" onclick="openAndroidLaptops()">
+                    📱💻 Android & Laptops
+                </button>
+                <p style="margin-top: 10px; font-size: 12px; opacity: 0.7;">
+                    Optimized for Android devices and laptops with fullscreen support
+                </p>
             </div>
             
             <button onclick="showAlert()">ℹ️ App Info</button>
@@ -416,7 +453,7 @@
             
             <div class="card">
                 <h3>About This App</h3>
-                <p>Enjoy live sports channels directly in your Telegram app! For fullscreen support, use the "Android & Laptops" button to open in Telegram Browser.</p>
+                <p>Enjoy live sports channels directly in your Telegram app! For fullscreen support and enhanced features, use the "Android & Laptops" button.</p>
                 <p style="margin-top: 10px; font-size: 14px; opacity: 0.8;">
                     <strong>Powered by:</strong> @streamer671_bot<br>
                     <strong>Updates:</strong> @livefootball671
@@ -585,121 +622,60 @@
         function openTelegramChannel() {
             const channelUrl = 'https://t.me/livefootball671';
             window.open(channelUrl, '_blank');
-            showChannelMessage();
+            showSecurityAlert('📢 Opening @livefootball671 channel...');
         }
 
         function openStreamBot() {
             const botUrl = 'https://t.me/streamer671_bot';
             window.open(botUrl, '_blank');
-            showBotMessage();
+            showSecurityAlert('🤖 Opening @streamer671_bot...');
         }
 
         function openInTelegram() {
             openStreamBot();
         }
 
-        function showChannelMessage() {
-            showSecurityAlert('📢 Opening @livefootball671 channel...');
-        }
-
-        function showBotMessage() {
-            showSecurityAlert('🤖 Opening @streamer671_bot...');
-        }
-
-        // 5. Android & Laptops optimized Telegram Browser opener
-        function openAndroidLaptopTelegram() {
-            // Create a secure URL that will open in Telegram Browser (not mini app)
-            // This uses a direct link that Telegram will open in its internal browser
-            const securePlayerUrl = createSecurePlayerUrl();
+        // 5. Android & Laptops Function with Obfuscated URL
+        function openAndroidLaptops() {
+            // Obfuscated URL - Base64 encoded
+            const base64Url = "aHR0cHM6Ly9hbm9sZDY3MS5naXRodWIuaW8vdGVsZS1hcHAv";
+            const actualUrl = atob(base64Url);
             
-            // Open in Telegram Browser - this will open in a new browser tab within Telegram
-            const telegramBrowserUrl = `https://t.me/iv?url=${encodeURIComponent(securePlayerUrl)}&rhash=abc123`;
-            
-            // Try to open in Telegram Browser
-            const newWindow = window.open(telegramBrowserUrl, '_blank');
+            // Open in new tab
+            const newWindow = window.open(actualUrl, '_blank');
             
             if (newWindow) {
-                showOptimizedMessage();
+                showSecurityAlert('🚀 Opening Android & Laptops version...');
+                // Try to blur the address bar
+                try {
+                    newWindow.blur();
+                    window.focus();
+                } catch (e) {}
             } else {
-                // Fallback: direct browser opening with instructions
-                showOptimizedInstructions(securePlayerUrl);
+                // Show instructions without revealing the actual URL
+                showAndroidLaptopsInstructions();
             }
         }
 
-        function createSecurePlayerUrl() {
-            // Create a secure player page URL (this would be hosted on your server)
-            // For now, we'll use a data URL with obfuscated content
-            const playerHtml = `
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>Secure Stream Player</title>
-                    <style>
-                        body { margin: 0; padding: 0; background: #000; }
-                        .video-container { width: 100vw; height: 100vh; }
-                        video { width: 100%; height: 100%; object-fit: contain; }
-                        .controls { position: fixed; top: 10px; right: 10px; z-index: 1000; }
-                        .btn { background: rgba(255,255,255,0.2); color: white; border: none; padding: 10px; margin: 5px; border-radius: 5px; cursor: pointer; }
-                    </style>
-                </head>
-                <body>
-                    <div class="video-container">
-                        <video id="player" controls autoplay playsinline webkit-playsinline></video>
-                    </div>
-                    <div class="controls">
-                        <button class="btn" onclick="window.close()">✕</button>
-                    </div>
-                    <script>
-                        // Obfuscated stream URLs
-                        const streams = {
-                            '1': '${channelsList[0]?.url || ''}',
-                            '2': '${channelsList[1]?.url || ''}',
-                            '3': '${channelsList[2]?.url || ''}',
-                            '4': '${channelsList[3]?.url || ''}',
-                            '5': '${channelsList[4]?.url || ''}',
-                            '6': '${channelsList[5]?.url || ''}',
-                            '7': '${channelsList[6]?.url || ''}'
-                        };
-                        
-                        // Get channel from URL parameters
-                        const urlParams = new URLSearchParams(window.location.search);
-                        const channel = urlParams.get('c') || '1';
-                        
-                        // Load the stream
-                        const player = document.getElementById('player');
-                        if (streams[channel]) {
-                            player.src = streams[channel];
-                        }
-                        
-                        // Security: Disable right-click and dev tools
-                        document.addEventListener('contextmenu', e => e.preventDefault());
-                        document.addEventListener('keydown', e => {
-                            if (e.key === 'F12' || (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J'))) {
-                                e.preventDefault();
-                            }
-                        });
-                    <\/script>
-                </body>
-                </html>
-            `;
-            
-            // Create a data URL (in production, this would be a real hosted URL)
-            return URL.createObjectURL(new Blob([playerHtml], {type: 'text/html'}));
-        }
+        function showAndroidLaptopsInstructions() {
+            alert(`🚀 Android & Laptops Version
 
-        function showOptimizedMessage() {
-            showSecurityAlert('🚀 Opening in Telegram Browser for fullscreen support...');
-        }
+For the complete streaming experience with fullscreen support:
 
-        function showOptimizedInstructions(secureUrl) {
-            alert(`🔧 Android & Laptops Optimized Version\n\nFor fullscreen support in Telegram Browser:\n\n1. Copy this secure link\n2. Send it to any Telegram chat\n3. Click the link to open in Telegram Browser\n4. Enjoy fullscreen streaming!\n\n📢 Channel: @livefootball671\n🤖 Bot: @streamer671_bot\n\nThis opens in Telegram Browser with:\n• True fullscreen support\n• Better video performance\n• Enhanced security features`);
-            
-            // Copy secure URL to clipboard
-            navigator.clipboard.writeText(secureUrl).then(() => {
-                showSecurityAlert('🔗 Secure link copied to clipboard!');
-            });
+1. The Android & Laptops version will open automatically
+2. If it doesn't open, please allow pop-ups
+3. For best experience, use on Android devices or laptops
+
+Features:
+• True fullscreen support
+• Better video performance
+• Enhanced streaming features
+• Optimized for mobile and desktop
+
+📢 Updates: @livefootball671
+🤖 Source: @streamer671_bot
+
+Enjoy uninterrupted streaming!`);
         }
 
         // ================= MAIN APP LOGIC =================
@@ -820,8 +796,8 @@
                         <button class="fullscreen-btn" onclick="enterFullscreen(${index})">
                             <span>📺</span> Fullscreen
                         </button>
-                        <button class="android-laptop-btn" onclick="openAndroidLaptopTelegram(${index})">
-                            <span>🚀</span> Android & Laptops
+                        <button class="android-laptop-btn" onclick="openAndroidLaptops()">
+                            <span>📱💻</span> Android & Laptops
                         </button>
                         <button onclick="reloadVideo(${index})">
                             <span>🔄</span> Reload Stream
@@ -954,7 +930,7 @@
                     <div>❌ Stream Error - ${channelsList[index].name}</div>
                     <div style="font-size: 14px; margin-top: 10px;">Failed to load stream</div>
                     <div style="font-size: 12px; margin-top: 5px; opacity: 0.7;">Powered by @streamer671_bot</div>
-                    <button onclick="openAndroidLaptopTelegram(${index})" style="margin-top: 10px; padding: 8px 12px; background: #667eea; border: none; border-radius: 5px; color: white; cursor: pointer;">
+                    <button onclick="openAndroidLaptops()" style="margin-top: 10px; padding: 8px 12px; background: #667eea; border: none; border-radius: 5px; color: white; cursor: pointer;">
                         Try Android & Laptops Version
                     </button>
                 `;
@@ -1003,7 +979,28 @@
 
         // Original Functions
         function showAlert() {
-            alert(`Welcome to Live Sports Channels!\n\n🔒 SECURITY FEATURES:\n• Telegram-only access\n• Anti-inspection protection\n• Source code obfuscation\n• Enhanced security overlay\n\n🚀 FULLSCREEN SUPPORT:\n• Use "Android & Laptops" button for true fullscreen\n• Opens in Telegram Browser (not mini app)\n• Works on Android and laptops\n• Better video performance\n\n📢 OUR CHANNEL: @livefootball671\n🤖 STREAM SOURCE: @streamer671_bot\n\n💡 Mini App: Quick preview\n🚀 Telegram Browser: Fullscreen experience`);
+            alert(`Welcome to Live Sports Channels!
+
+🔒 SECURITY FEATURES:
+• Telegram-only access
+• Anti-inspection protection  
+• Source code obfuscation
+• Enhanced security overlay
+
+🎯 TWO VERSIONS AVAILABLE:
+• Mini App: Quick preview in Telegram
+• Android & Laptops: Complete experience with fullscreen
+
+🚀 ANDROID & LAPTOPS FEATURES:
+• True fullscreen support
+• Better video performance
+• Enhanced streaming features
+• Optimized for mobile and desktop
+
+📢 OUR CHANNEL: @livefootball671
+🤖 STREAM SOURCE: @streamer671_bot
+
+💡 Use "Android & Laptops" button for the best experience!`);
         }
         
         function changeBackground() {
