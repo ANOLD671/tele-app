@@ -98,6 +98,24 @@
             border-radius: 8px;
             overflow: hidden;
             background: #000;
+            position: relative;
+        }
+        
+        .video-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: #111;
+            color: #fff;
+            font-size: 16px;
+        }
+        
+        .video-error {
+            background: #2d1a1a;
+            color: #ff6b6b;
         }
         
         .close-btn {
@@ -145,10 +163,107 @@
             animation: pulse 2s infinite;
         }
         
+        .loading-spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: #2575fc;
+            animation: spin 1s ease-in-out infinite;
+            margin-bottom: 10px;
+        }
+        
+        /* Fullscreen Styles */
+        .fullscreen-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #000;
+            z-index: 1000;
+            display: none;
+            flex-direction: column;
+        }
+        
+        .fullscreen-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.8);
+        }
+        
+        .fullscreen-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .fullscreen-close {
+            background: #ff4757;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .fullscreen-video-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+        }
+        
+        .fullscreen-video {
+            width: 100%;
+            height: 100%;
+            max-width: 100%;
+            max-height: 100%;
+        }
+        
+        .channel-controls {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .channel-controls button {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+        }
+        
+        .fullscreen-btn {
+            background: linear-gradient(135deg, #ff9a00 0%, #ff6a00 100%);
+        }
+        
+        .show-btn {
+            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
+        }
+        
+        .hide-btn {
+            background: linear-gradient(135deg, #8e2de2 0%, #4a00e0 100%);
+        }
+        
+        .hidden {
+            display: none;
+        }
+        
         @keyframes pulse {
             0% { opacity: 1; }
             50% { opacity: 0.5; }
             100% { opacity: 1; }
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
 </head>
@@ -175,6 +290,7 @@
                 <li>Live sports streaming</li>
                 <li>Multiple channels</li>
                 <li>High quality video</li>
+                <li>Fullscreen support</li>
                 <li>Works in Telegram</li>
             </ul>
         </div>
@@ -189,6 +305,23 @@
         </div>
     </div>
 
+    <!-- Fullscreen Overlay -->
+    <div class="fullscreen-overlay" id="fullscreenOverlay">
+        <div class="fullscreen-header">
+            <div class="fullscreen-title" id="fullscreenTitle">Live Stream</div>
+            <button class="fullscreen-close" onclick="exitFullscreen()">✕</button>
+        </div>
+        <div class="fullscreen-video-container">
+            <iframe
+                id="fullscreenVideo"
+                class="fullscreen-video"
+                style="border: none;"
+                allow="clipboard-write; autoplay"
+                allowFullScreen
+            ></iframe>
+        </div>
+    </div>
+
     <script>
         // Initialize Telegram Web App
         let tg = window.Telegram.WebApp;
@@ -200,71 +333,89 @@
         
         // Channels Configuration
         const channelsList = [ 
-             {
+            {
                 name: "SKY SPORTS PREMIER LEAGUE",
                 url: "https://river-1.rutube.ru/stream/genetta-503.ost.rutube.ru/f8J7qbReRhO1budHsggWXQ/1764329589/e5bacac3b8e730791d4cab20ae81cd8f/720p_stream.m3u8",
                 icon: "🔴"
             },
-             {
+            {
                 name: "MATCH TV",
                 url: "https://river-1.rutube.ru/stream/genetta-503.ost.rutube.ru/f8J7qbReRhO1budHsggWXQ/1764329589/e5bacac3b8e730791d4cab20ae81cd8f/360p_stream.m3u8",
                 icon: "⚽"
             },
-           
             {
                 name: "SKY SPORTS F1",
                 url: "https://river-1.rutube.ru/stream/genetta-315.m9.rutube.ru/FHoN2GtSz1A3u-xo9IoJnQ/1764329663/e5df6984021365a58b3ba22dab2f670a/720p_stream.m3u8",
                 icon: "🏎️"
             },
-            
-             {
+            {
                 name: "SKY SPORTS",
-                url: "https://river-3-369.rtbcdn.ru/stream/genetta-315.m9.rutube.ru/fZjEQ8HtoCsz26KCDZEKgA/1764329700/9585fdae92af45f113fdcc9f6c4ba442/720p_stream.m3u8",                icon: "📺"
-             },
-             {
+                url: "https://river-3-369.rtbcdn.ru/stream/genetta-315.m9.rutube.ru/fZjEQ8HtoCsz26KCDZEKgA/1764329700/9585fdae92af45f113fdcc9f6c4ba442/720p_stream.m3u8",
+                icon: "📺"
+            },
+            {
                 name: "SKY SPORTS TENNIS",
-                url: "https://river-5-548.rtbcdn.ru/stream/genetta-519.ost.rutube.ru/znfJQJmFM5cdrAdALMRVsQ/1764329736/5f5dc9d64b43dfc740e92f2bdf2b0d38/720p_stream.m3u8",  
+                url: "https://river-5-548.rtbcdn.ru/stream/genetta-519.ost.rutube.ru/znfJQJmFM5cdrAdALMRVsQ/1764329736/5f5dc9d64b43dfc740e92f2bdf2b0d38/720p_stream.m3u8",
                 icon: "🎾"
-             },
-              {
+            },
+            {
                 name: "NBA",
-                url: "https://river-4-421.rtbcdn.ru/stream/genetta-304.m9.rutube.ru/QOr8ZCbJXVEnUAdQCLA0KQ/1764175874/d01241e9fd2bc2d65dbf6d74cca02f89/576p_stream.m3u8",  
+                url: "https://river-4-421.rtbcdn.ru/stream/genetta-304.m9.rutube.ru/QOr8ZCbJXVEnUAdQCLA0KQ/1764175874/d01241e9fd2bc2d65dbf6d74cca02f89/576p_stream.m3u8",
                 icon: "🏀"
-             },
-             
-             {
+            },
+            {
                 name: "MATCH TV",
                 url: "https://river-1.rutube.ru/stream/genetta-313.m9.rutube.ru/YY8CvazEaG3gGU1mB0oJvw/1764023362/11bbbec75a2ceb8cf446ad16813c6eec/1080p_stream.m3u8",
                 icon: "⚽"
             },
-          
         ];
 
         // DOM Elements
         const allChannelsContainer = document.getElementById("allChannelsContainer");
+        const fullscreenOverlay = document.getElementById("fullscreenOverlay");
+        const fullscreenVideo = document.getElementById("fullscreenVideo");
+        const fullscreenTitle = document.getElementById("fullscreenTitle");
+
+        // Track video states for each channel
+        const videoStates = channelsList.map(() => ({ isVisible: false }));
 
         // Load All Channels with their videos on page load
         function loadAllChannels() {
             allChannelsContainer.innerHTML = "";
             
-            channelsList.forEach(channel => {
+            channelsList.forEach((channel, index) => {
                 const channelContainer = document.createElement("div");
                 channelContainer.className = "channel-video-container";
+                channelContainer.id = `channel-${index}`;
                 
                 channelContainer.innerHTML = `
                     <div class="channel-title">
                         <span class="channel-icon">${channel.icon}</span>
                         ${channel.name}
                     </div>
-                    <div class="channel-video">
+                    <div class="channel-video" id="video-container-${index}">
+                        <div class="video-placeholder" id="placeholder-${index}">
+                            <div class="loading-spinner"></div>
+                            <div>Loading stream...</div>
+                        </div>
                         <iframe
+                            id="video-${index}"
                             width="100%"
                             height="100%"
                             src="${channel.url}"
                             style="border: none;"
-                            allow="clipboard-write; autoplay; fullscreen"
+                            allow="clipboard-write; autoplay"
                             allowFullScreen
+                            class="hidden"
+                            onload="handleVideoLoad(${index})"
+                            onerror="handleVideoError(${index})"
                         ></iframe>
+                    </div>
+                    <div class="channel-controls">
+                        <button class="show-btn" onclick="showVideo(${index})" id="show-btn-${index}">▶️ Show Video</button>
+                        <button class="hide-btn hidden" onclick="hideVideo(${index})" id="hide-btn-${index}">⏸️ Hide Video</button>
+                        <button class="fullscreen-btn" onclick="enterFullscreen(${index})">📺 Fullscreen</button>
+                        <button onclick="reloadVideo(${index})">🔄 Reload Stream</button>
                     </div>
                 `;
                 
@@ -272,9 +423,172 @@
             });
         }
 
+        // Show video function
+        function showVideo(index) {
+            const video = document.getElementById(`video-${index}`);
+            const placeholder = document.getElementById(`placeholder-${index}`);
+            const showBtn = document.getElementById(`show-btn-${index}`);
+            const hideBtn = document.getElementById(`hide-btn-${index}`);
+            
+            if (video && placeholder) {
+                video.classList.remove('hidden');
+                placeholder.classList.add('hidden');
+                videoStates[index].isVisible = true;
+                
+                // Update button visibility
+                showBtn.classList.add('hidden');
+                hideBtn.classList.remove('hidden');
+            }
+        }
+
+        // Hide video function
+        function hideVideo(index) {
+            const video = document.getElementById(`video-${index}`);
+            const placeholder = document.getElementById(`placeholder-${index}`);
+            const showBtn = document.getElementById(`show-btn-${index}`);
+            const hideBtn = document.getElementById(`hide-btn-${index}`);
+            
+            if (video && placeholder) {
+                video.classList.add('hidden');
+                placeholder.classList.remove('hidden');
+                videoStates[index].isVisible = false;
+                
+                // Update button visibility
+                showBtn.classList.remove('hidden');
+                hideBtn.classList.add('hidden');
+            }
+        }
+
+        // Enter fullscreen mode
+        function enterFullscreen(index) {
+            const channel = channelsList[index];
+            const videoUrl = channel.url;
+            
+            // Set fullscreen video source and title
+            fullscreenVideo.src = videoUrl;
+            fullscreenTitle.textContent = channel.name;
+            
+            // Show fullscreen overlay
+            fullscreenOverlay.style.display = 'flex';
+            
+            // Hide Telegram header in fullscreen if possible
+            if (tg && tg.showHeader) {
+                tg.showHeader(false);
+            }
+            
+            // Lock orientation if possible
+            lockOrientation();
+        }
+
+        // Exit fullscreen mode
+        function exitFullscreen() {
+            // Hide fullscreen overlay
+            fullscreenOverlay.style.display = 'none';
+            
+            // Stop the video
+            fullscreenVideo.src = '';
+            
+            // Show Telegram header again
+            if (tg && tg.showHeader) {
+                tg.showHeader(true);
+            }
+            
+            // Unlock orientation
+            unlockOrientation();
+        }
+
+        // Lock screen orientation to landscape for fullscreen
+        function lockOrientation() {
+            if (screen.orientation && screen.orientation.lock) {
+                screen.orientation.lock('landscape').catch(error => {
+                    console.log('Orientation lock not supported:', error);
+                });
+            }
+        }
+
+        // Unlock screen orientation
+        function unlockOrientation() {
+            if (screen.orientation && screen.orientation.unlock) {
+                screen.orientation.unlock();
+            }
+        }
+
+        // Handle video load event
+        function handleVideoLoad(index) {
+            const placeholder = document.getElementById(`placeholder-${index}`);
+            const video = document.getElementById(`video-${index}`);
+            
+            if (placeholder) {
+                placeholder.classList.add('hidden');
+            }
+            if (video) {
+                video.classList.remove('hidden');
+                videoStates[index].isVisible = true;
+                
+                // Update button visibility
+                const showBtn = document.getElementById(`show-btn-${index}`);
+                const hideBtn = document.getElementById(`hide-btn-${index}`);
+                if (showBtn && hideBtn) {
+                    showBtn.classList.add('hidden');
+                    hideBtn.classList.remove('hidden');
+                }
+            }
+        }
+
+        // Handle video error event
+        function handleVideoError(index) {
+            const placeholder = document.getElementById(`placeholder-${index}`);
+            
+            if (placeholder) {
+                placeholder.innerHTML = `
+                    <div>❌ Stream Error</div>
+                    <div style="font-size: 14px; margin-top: 10px;">Failed to load stream</div>
+                `;
+                placeholder.classList.add('video-error');
+            }
+        }
+
+        // Reload video stream
+        function reloadVideo(index) {
+            const video = document.getElementById(`video-${index}`);
+            const placeholder = document.getElementById(`placeholder-${index}`);
+            const showBtn = document.getElementById(`show-btn-${index}`);
+            const hideBtn = document.getElementById(`hide-btn-${index}`);
+            
+            if (video && placeholder) {
+                // Reset placeholder
+                placeholder.innerHTML = `
+                    <div class="loading-spinner"></div>
+                    <div>Reloading stream...</div>
+                `;
+                placeholder.classList.remove('video-error');
+                placeholder.classList.remove('hidden');
+                video.classList.add('hidden');
+                
+                // Reset button states
+                showBtn.classList.remove('hidden');
+                hideBtn.classList.add('hidden');
+                videoStates[index].isVisible = false;
+                
+                // Force reload by updating src
+                const currentSrc = video.src;
+                video.src = '';
+                setTimeout(() => {
+                    video.src = currentSrc;
+                }, 100);
+            }
+        }
+
+        // Handle escape key to exit fullscreen
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape' && fullscreenOverlay.style.display === 'flex') {
+                exitFullscreen();
+            }
+        });
+
         // Original Functions
         function showAlert() {
-            alert('Welcome to Live Sports Channels!\n\nThis app lets you watch live sports channels directly in Telegram.');
+            alert('Welcome to Live Sports Channels!\n\nThis app lets you watch live sports channels directly in Telegram.\n\nUse the "Fullscreen" button for the best viewing experience!');
         }
         
         function changeBackground() {
