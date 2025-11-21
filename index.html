@@ -6,21 +6,6 @@
     <title>Live Sports Channels</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
-        /* Enhanced CSS with better organization and additional features */
-        :root {
-            --primary-gradient: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
-            --success-gradient: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
-            --danger-gradient: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
-            --warning-gradient: linear-gradient(135deg, #ff9a00 0%, #ff6a00 100%);
-            --telegram-gradient: linear-gradient(135deg, #0088cc 0%, #00aced 100%);
-            --dark-bg: #1a1a2e;
-            --card-bg: rgba(255, 255, 255, 0.1);
-            --text-color: #ffffff;
-            --border-radius: 12px;
-            --box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            --transition: all 0.3s ease;
-        }
-        
         * {
             box-sizing: border-box;
             margin: 0;
@@ -31,8 +16,8 @@
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             margin: 0;
             padding: 20px;
-            background: var(--dark-bg);
-            color: var(--text-color);
+            background: #1a1a2e;
+            color: #ffffff;
             min-height: 100vh;
             transition: background 0.5s ease;
             -webkit-user-select: none;
@@ -47,25 +32,25 @@
         }
         
         h1 {
-            color: var(--text-color);
+            color: #ffffff;
             margin-bottom: 30px;
             text-shadow: 0 2px 4px rgba(0,0,0,0.3);
             text-align: center;
         }
         
         .card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             padding: 20px;
             margin-bottom: 15px;
-            box-shadow: var(--box-shadow);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
         button {
-            background: var(--primary-gradient);
-            color: var(--text-color);
+            background: linear-gradient(135deg, #6a11cb 0%, #2575fc 100%);
+            color: #ffffff;
             border: none;
             padding: 14px 24px;
             border-radius: 10px;
@@ -74,8 +59,8 @@
             cursor: pointer;
             width: 100%;
             margin: 8px 0;
-            transition: var(--transition);
-            box-shadow: var(--box-shadow);
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         
         button:hover {
@@ -83,20 +68,10 @@
             box-shadow: 0 6px 12px rgba(0,0,0,0.2);
         }
         
-        button:active {
-            transform: translateY(0);
-        }
-        
-        button:disabled {
-            opacity: 0.6;
-            cursor: not-allowed;
-            transform: none;
-        }
-        
         .welcome {
-            background: var(--card-bg);
+            background: rgba(255, 255, 255, 0.1);
             padding: 20px;
-            border-radius: var(--border-radius);
+            border-radius: 12px;
             margin-bottom: 20px;
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
@@ -106,7 +81,7 @@
         .channel-video-container {
             margin: 25px 0;
             background: rgba(255, 255, 255, 0.05);
-            border-radius: var(--border-radius);
+            border-radius: 12px;
             padding: 15px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.2);
         }
@@ -115,7 +90,7 @@
             font-size: 18px;
             font-weight: bold;
             margin-bottom: 15px;
-            color: var(--text-color);
+            color: #ffffff;
             display: flex;
             align-items: center;
             gap: 10px;
@@ -148,7 +123,7 @@
         }
         
         .close-btn {
-            background: var(--danger-gradient);
+            background: linear-gradient(135deg, #ff416c 0%, #ff4b2b 100%);
         }
 
         .feature-list {
@@ -202,61 +177,6 @@
             margin-bottom: 10px;
         }
         
-        /* Fullscreen Styles */
-        .fullscreen-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: #000;
-            z-index: 1000;
-            display: none;
-            flex-direction: column;
-        }
-        
-        .fullscreen-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px;
-            background: rgba(0, 0, 0, 0.8);
-        }
-        
-        .fullscreen-title {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        
-        .fullscreen-close {
-            background: #ff4757;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            font-size: 20px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .fullscreen-video-container {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 100%;
-        }
-        
-        .fullscreen-video {
-            width: 100%;
-            height: 100%;
-            max-width: 100%;
-            max-height: 100%;
-        }
-        
         .channel-controls {
             display: flex;
             gap: 10px;
@@ -271,12 +191,8 @@
             min-width: 140px;
         }
         
-        .fullscreen-btn {
-            background: var(--warning-gradient);
-        }
-        
         .show-btn {
-            background: var(--success-gradient);
+            background: linear-gradient(135deg, #00b09b 0%, #96c93d 100%);
         }
         
         .hide-btn {
@@ -298,7 +214,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: var(--dark-bg);
+            background: #1a1a2e;
             z-index: 9999;
             display: flex;
             flex-direction: column;
@@ -309,7 +225,7 @@
         }
         
         .security-message {
-            background: var(--card-bg);
+            background: rgba(255, 255, 255, 0.1);
             padding: 30px;
             border-radius: 15px;
             backdrop-filter: blur(10px);
@@ -317,12 +233,12 @@
         }
         
         .telegram-btn {
-            background: var(--telegram-gradient);
+            background: linear-gradient(135deg, #0088cc 0%, #00aced 100%);
             margin-top: 20px;
         }
 
         .telegram-channel-btn {
-            background: var(--telegram-gradient);
+            background: linear-gradient(135deg, #0088cc 0%, #00aced 100%);
             margin: 10px 0;
         }
         
@@ -424,58 +340,6 @@
         .toast.warning {
             background: #FF9800;
         }
-        
-        /* Loading overlay */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 9998;
-            flex-direction: column;
-            color: white;
-        }
-        
-        /* Channel filter */
-        .channel-filter {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-        
-        .filter-btn {
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            transition: var(--transition);
-        }
-        
-        .filter-btn.active {
-            background: var(--primary-gradient);
-        }
-        
-        /* Responsive improvements */
-        @media (max-width: 480px) {
-            .channel-controls {
-                flex-direction: column;
-            }
-            
-            .channel-controls button {
-                min-width: 100%;
-            }
-            
-            .telegram-links {
-                flex-direction: column;
-            }
-        }
     </style>
 </head>
 <body class="no-context" oncontextmenu="return false">
@@ -497,12 +361,6 @@
                 If you're already in Telegram, please wait...
             </p>
         </div>
-    </div>
-
-    <!-- Loading Overlay -->
-    <div id="loadingOverlay" class="loading-overlay hidden">
-        <div class="loading-spinner"></div>
-        <p style="margin-top: 15px;">Loading application...</p>
     </div>
 
     <!-- Toast Container -->
@@ -527,16 +385,11 @@
                 </div>
                 <div class="android-laptops-info">
                     <strong>🚀 Android & Laptops Version</strong>
-                    <p style="margin: 5px 0; font-size: 14px;">For fullscreen support and enhanced features</p>
+                    <p style="margin: 5px 0; font-size: 14px;">For enhanced features and better performance</p>
                     <button class="android-laptop-btn" id="androidLaptopBtn" onclick="openAndroidLaptops()" style="margin: 5px 0;">
                         📱💻 Android & Laptops
                     </button>
                 </div>
-            </div>
-
-            <!-- Channel Filter -->
-            <div class="channel-filter" id="channelFilter">
-                <!-- Filter buttons will be added here dynamically -->
             </div>
 
             <!-- All Channels Section -->
@@ -554,7 +407,6 @@
                     <li>Multiple channels</li>
                     <li>High quality video</li>
                     <li>Android & Laptops version available</li>
-                    <li>Fullscreen support</li>
                     <li>Secure Telegram-only access</li>
                     <li>Powered by @streamer671_bot</li>
                 </ul>
@@ -563,12 +415,12 @@
             <!-- Android & Laptops Button Section -->
             <div class="card">
                 <h3>🚀 Android & Laptops Version</h3>
-                <p>For the complete experience with fullscreen support and enhanced features:</p>
+                <p>For the complete experience with enhanced features:</p>
                 <button class="android-laptop-btn" id="androidLaptopBtn2" onclick="openAndroidLaptops()">
                     📱💻 Android & Laptops
                 </button>
                 <p style="margin-top: 10px; font-size: 12px; opacity: 0.7;">
-                    Optimized for Android devices and laptops with fullscreen support
+                    Optimized for Android devices and laptops
                 </p>
             </div>
             
@@ -578,89 +430,54 @@
             
             <div class="card">
                 <h3>About This App</h3>
-                <p>Enjoy live sports channels directly in your Telegram app! For fullscreen support and enhanced features, use the "Android & Laptops" button.</p>
+                <p>Enjoy live sports channels directly in your Telegram app! For enhanced features, use the "Android & Laptops" button.</p>
                 <p style="margin-top: 10px; font-size: 14px; opacity: 0.8;">
                     <strong>Powered by:</strong> @streamer671_bot<br>
                     <strong>Updates:</strong> @livefootball671
                 </p>
             </div>
         </div>
-
-        <!-- Fullscreen Overlay -->
-        <div class="fullscreen-overlay" id="fullscreenOverlay">
-            <div class="fullscreen-header">
-                <div class="fullscreen-title" id="fullscreenTitle">Live Stream</div>
-                <button class="fullscreen-close" onclick="exitFullscreen()">✕</button>
-            </div>
-            <div class="fullscreen-video-container">
-                <iframe
-                    id="fullscreenVideo"
-                    class="fullscreen-video"
-                    style="border: none;"
-                    allow="clipboard-write; autoplay"
-                    allowFullScreen
-                ></iframe>
-            </div>
-        </div>
     </div>
 
     <script>
-        // ================= ENHANCED SECURITY LAYERS =================
+        // ================= SECURITY LAYERS =================
         
-        // 1. Enhanced Telegram WebApp detection
+        // 1. Detect if running in Telegram WebApp
         function isTelegramWebApp() {
             // Check for Telegram WebApp API
             if (window.Telegram && window.Telegram.WebApp) {
                 return true;
             }
             
-            // Enhanced Telegram-specific user agent detection
+            // Check for Telegram-specific user agent
             const userAgent = navigator.userAgent.toLowerCase();
-            const telegramIndicators = [
-                'telegram',
-                'webview',
-                'twebsdk',
-                'twc'
-            ];
-            
-            if (telegramIndicators.some(indicator => userAgent.includes(indicator))) {
+            if (userAgent.includes('telegram') || userAgent.includes('webview')) {
                 return true;
             }
             
-            // Check for Telegram iframe parameters with enhanced regex
-            const urlParams = new URLSearchParams(window.location.search);
-            const hashParams = new URLSearchParams(window.location.hash.substring(1));
-            
-            if (urlParams.has('tgWebApp') || hashParams.has('tgWebApp') ||
-                urlParams.has('tgWebAppVersion') || hashParams.has('tgWebAppVersion')) {
+            // Check for Telegram iframe parameters
+            if (window.location.search.includes('tgWebApp') || 
+                window.location.hash.includes('tgWebApp')) {
                 return true;
             }
             
             return false;
         }
 
-        // 2. Enhanced WebView detection
+        // 2. Detect if running in WebView (Android/iOS)
         function isWebView() {
             const userAgent = navigator.userAgent.toLowerCase();
-            const webViewIndicators = [
-                'wv',
-                '; wv)',
-                'mobile safari/',
-                'version/'
-            ];
-            
-            return webViewIndicators.some(indicator => 
-                userAgent.includes(indicator) && 
-                !userAgent.includes('chrome/')
-            );
+            return userAgent.includes('wv') || 
+                   (userAgent.includes('android') && userAgent.includes('; wv')) ||
+                   userAgent.includes('mobile') && userAgent.includes('safari') && !userAgent.includes('chrome');
         }
 
-        // 3. Enhanced regular browser detection
+        // 3. Detect if running in regular browser
         function isRegularBrowser() {
             return !isTelegramWebApp() && !isWebView();
         }
 
-        // 4. Enhanced anti-inspection techniques
+        // 4. Anti-inspection techniques
         function setupAntiInspection() {
             // Disable right-click context menu
             document.addEventListener('contextmenu', function(e) {
@@ -669,77 +486,170 @@
                 return false;
             });
             
-            // Enhanced keyboard shortcuts blocking
+            // Disable F12, Ctrl+Shift+I, Ctrl+Shift+J, Ctrl+U
             document.addEventListener('keydown', function(e) {
-                const blockedCombinations = [
-                    { key: 'F12', ctrl: false, shift: false },
-                    { key: 'I', ctrl: true, shift: true },
-                    { key: 'J', ctrl: true, shift: true },
-                    { key: 'C', ctrl: true, shift: true },
-                    { key: 'U', ctrl: true, shift: false }
-                ];
-                
-                const isBlocked = blockedCombinations.some(combo => 
-                    e.key === combo.key && 
-                    e.ctrlKey === combo.ctrl && 
-                    e.shiftKey === combo.shift
-                );
-                
-                if (isBlocked) {
+                if (e.key === 'F12' || 
+                    (e.ctrlKey && e.shiftKey && (e.key === 'I' || e.key === 'J' || e.key === 'C')) ||
+                    (e.ctrlKey && e.key === 'u')) {
                     e.preventDefault();
                     showToast('Developer tools are disabled for security.', 'warning');
                     return false;
                 }
             });
             
-            // Enhanced dev tools detection
+            // Detect dev tools opening
             let devToolsOpen = false;
+            const threshold = 160;
             const checkDevTools = () => {
-                const widthThreshold = window.outerWidth - window.innerWidth > 160;
-                const heightThreshold = window.outerHeight - window.innerHeight > 160;
-                
+                const widthThreshold = window.outerWidth - window.innerWidth > threshold;
+                const heightThreshold = window.outerHeight - window.innerHeight > threshold;
                 if ((widthThreshold || heightThreshold) && !devToolsOpen) {
                     devToolsOpen = true;
                     showToast('Developer tools detected. Please refresh the page.', 'error');
-                    // Optionally trigger security measures
-                    triggerSecurityMeasures();
                 }
             };
-            
             setInterval(checkDevTools, 1000);
-            
-            // Monitor console usage
-            const originalConsole = {
-                log: console.log,
-                warn: console.warn,
-                error: console.error
-            };
-            
-            ['log', 'warn', 'error'].forEach(method => {
-                console[method] = function() {
-                    showToast('Console access detected.', 'warning');
-                    originalConsole[method].apply(console, arguments);
-                };
-            });
         }
 
-        function triggerSecurityMeasures() {
-            // Additional security measures when dev tools are detected
-            document.body.style.opacity = '0.5';
-            setTimeout(() => {
-                document.body.style.opacity = '1';
-            }, 1000);
+        // 5. Channel data with UPDATED stream URLs
+        function getChannelsData() {
+            // Channel data with names in clear text and UPDATED URLs
+            const channels = [
+                { 
+                    name: "SKY SPORTS TENNIS", 
+                    icon: "🎾", 
+                    type: "tennis",
+                    url: "https://river-1.rutube.ru/stream/genetta-519.ost.rutube.ru/LucpNnnNH3ybVeTQHezm4w/1764353569/5f5dc9d64b43dfc740e92f2bdf2b0d38/720p_stream.m3u8" 
+                },
+                { 
+                    name: "SKY SPORTS MAIN", 
+                    icon: "📺", 
+                    type: "sports",
+                    url: "https://river-3-369.rtbcdn.ru/stream/genetta-315.m9.rutube.ru/T2r5xiMA5jdNhhG6eODTYA/1764353611/9585fdae92af45f113fdcc9f6c4ba442/720p_stream.m3u8" 
+                },
+                { 
+                    name: "SKY SPORTS PREMIER LEAGUE", 
+                    icon: "🔴", 
+                    type: "premier_league",
+                    url: "https://river-1.rutube.ru/stream/genetta-302.m9.rutube.ru/dQg1h2LQAK3UuON3oQ-4vg/1764353673/e5bacac3b8e730791d4cab20ae81cd8f/720p_stream.m3u8" 
+                },
+                { 
+                    name: "SKY SPORTS F1", 
+                    icon: "🏎️", 
+                    type: "f1",
+                    url: "https://river-3-374.rtbcdn.ru/stream/genetta-318.m9.rutube.ru/SzT1NdQAbji6KHBT2c72uA/1764353724/e5df6984021365a58b3ba22dab2f670a/720p_stream.m3u8" 
+                }
+            ];
+
+            return channels;
+        }
+
+        // 6. Enhanced Telegram Integration Functions
+        function openTelegramChannel() {
+            const channelUrl = 'https://t.me/livefootball671';
+            window.open(channelUrl, '_blank');
+            showToast('📢 Opening @livefootball671 channel...', 'info');
+        }
+
+        function openStreamBot() {
+            const botUrl = 'https://t.me/streamer671_bot';
+            window.open(botUrl, '_blank');
+            showToast('🤖 Opening @streamer671_bot...', 'info');
+        }
+
+        function openInTelegram() {
+            openStreamBot();
+        }
+
+        // 7. Enhanced Android & Laptops Function with encoded URL
+        function openAndroidLaptops() {
+            // Check if we're in WebView
+            if (isWebView()) {
+                // In WebView, redirect to Mini App
+                showToast('🔄 Redirecting to Mini App...', 'info');
+                // This would typically use a deep link to open the Telegram Mini App
+                // For demo purposes, we'll just show an alert
+                alert('In a real implementation, this would open the Mini App in Telegram');
+                return;
+            }
             
-            // Log security event
-            logSecurityEvent('dev_tools_detected');
+            // Obfuscated URL - Base64 encoded and split into parts
+            // Original URL: https://anold671.github.io/tele-app/
+            const part1 = "aHR0cHM6Ly";
+            const part2 = "9hbm9sZDY3";
+            const part3 = "MS5naXRodWI";
+            const part4 = "uaW8vdGVsZS";
+            const part5 = "1hcHAv";
+            
+            // Combine and decode
+            const encodedUrl = part1 + part2 + part3 + part4 + part5;
+            const actualUrl = atob(encodedUrl);
+            
+            // Open in new tab
+            const newWindow = window.open(actualUrl, '_blank');
+            
+            if (newWindow) {
+                showToast('🚀 Opening Android & Laptops version...', 'success');
+                // Try to blur the address bar
+                try {
+                    newWindow.blur();
+                    window.focus();
+                } catch (e) {}
+            } else {
+                // Show instructions without revealing the actual URL
+                showAndroidLaptopsInstructions();
+            }
         }
 
-        function logSecurityEvent(eventType) {
-            // In a real implementation, this would send to a server
-            console.log(`Security event: ${eventType}`);
+        function showAndroidLaptopsInstructions() {
+            alert(`🚀 Android & Laptops Version
+
+For the complete streaming experience with enhanced features:
+
+1. The Android & Laptops version will open automatically
+2. If it doesn't open, please allow pop-ups
+3. For best experience, use on Android devices or laptops
+
+Features:
+• Enhanced streaming features
+• Better video performance
+• Optimized for mobile and desktop
+
+📢 Updates: @livefootball671
+🤖 Source: @streamer671_bot
+
+Enjoy uninterrupted streaming!`);
         }
 
-        // 5. Enhanced toast notification system
+        // ================= MAIN APP LOGIC =================
+        
+        let tg = null;
+        let channelsList = [];
+        const allChannelsContainer = document.getElementById("allChannelsContainer");
+        const securityOverlay = document.getElementById("securityOverlay");
+        const appContent = document.getElementById("appContent");
+        const deviceInfo = document.getElementById("deviceInfo");
+        const androidLaptopBtn = document.getElementById("androidLaptopBtn");
+        const androidLaptopBtn2 = document.getElementById("androidLaptopBtn2");
+
+        // Detect device type
+        function detectDevice() {
+            const userAgent = navigator.userAgent.toLowerCase();
+            let deviceType = 'Unknown Device';
+            
+            if (userAgent.includes('android')) {
+                deviceType = '📱 Android Device';
+            } else if (userAgent.includes('iphone') || userAgent.includes('ipad')) {
+                deviceType = '📱 iOS Device';
+            } else if (userAgent.includes('windows') || userAgent.includes('macintosh') || userAgent.includes('linux')) {
+                deviceType = '💻 Laptop/Desktop';
+            }
+            
+            deviceInfo.textContent = deviceType;
+            return deviceType;
+        }
+
+        // Enhanced toast notification system
         function showToast(message, type = 'info', duration = 3000) {
             const toastContainer = document.getElementById('toastContainer');
             const toast = document.createElement('div');
@@ -764,188 +674,8 @@
             }, duration);
         }
 
-        // 6. Enhanced channel data with categories
-        function getChannelsData() {
-            // Base64 encoded channel data for additional security
-            const encodedChannels = [
-                { name: "U0tZIFNQT1JUUyBQUkVNSUVSIExFQUdVRQ==", icon: "🔴", type: "premier_league", category: "football" },
-                { name: "TUFUQ0ggVFY=", icon: "⚽", type: "match_tv", category: "football" },
-                { name: "U0tZIFNQT1JUUyBGMQ==", icon: "🏎️", type: "f1", category: "racing" },
-                { name: "U0tZIFNQT1JUUw==", icon: "📺", type: "sports", category: "general" },
-                { name: "U0tZIFNQT1JUUyBURU5OSVM=", icon: "🎾", type: "tennis", category: "tennis" },
-                { name: "TkJB", icon: "🏀", type: "nba", category: "basketball" },
-                { name: "TUFUQ0ggVFYgMg==", icon: "⚽", type: "match_tv2", category: "football" }
-            ];
-
-            // Decode channel names
-            const channels = encodedChannels.map(channel => ({
-                name: atob(channel.name),
-                icon: channel.icon,
-                type: channel.type,
-                category: channel.category
-            }));
-
-            // Generate secure stream URLs based on channel type
-            return channels.map(channel => {
-                // Obfuscated stream URLs - these are encoded and will be decoded at runtime
-                let encodedUrl = '';
-                
-                // Different encoded stream sources based on channel type
-                switch(channel.type) {
-                    case 'premier_league':
-                        encodedUrl = "aHR0cHM6Ly9yaXZlci0xLnJ1dHViZS5ydS9zdHJlYW0vZ2VuZXR0YS01MDMub3N0LnJ1dHViZS5ydS9mOEo3cWJSZVJoTzFidWRIc2dnV1hRLzE3NjQzMjk1ODkvZTViYWNhYzNiOGU3MzA3OTFkNGNhYjIwYWU4MWNkOGYvNzIwcF9zdHJlYW0ubTN1OA==";
-                        break;
-                    case 'match_tv':
-                        encodedUrl = "aHR0cHM6Ly9yaXZlci0xLnJ1dHViZS5ydS9zdHJlYW0vZ2VuZXR0YS01MDMub3N0LnJ1dHViZS5ydS9mOEo3cWJSZVJoTzFidWRIc2dnV1hRLzE3NjQzMjk1ODkvZTViYWNhYzNiOGU3MzA3OTFkNGNhYjIwYWU4MWNkOGYvMzYwcF9zdHJlYW0ubTN1OA==";
-                        break;
-                    case 'f1':
-                        encodedUrl = "aHR0cHM6Ly9yaXZlci0xLnJ1dHViZS5ydS9zdHJlYW0vZ2VuZXR0YS0zMTUubTkucnV0dWJlLnJ1L0ZIb04yR3RTejFBM3UteG85SW9KblEvMTc2NDMyOTY2My9lNWRmNjk4NDAyMTM2NWE1OGIzYmEyMmRhYjJmNjcwYS83MjBwX3N0cmVhbS5tM3U4";
-                        break;
-                    case 'sports':
-                        encodedUrl = "aHR0cHM6Ly9yaXZlci0zLTM2OS5ydGJjZG4ucnUvc3RyZWFtL2dlbmV0dGEtMzE1Lm05LnJ1dHViZS5ydS9mWmpFUThIdG9Dc3oyNktDRFpFS2dBLzE3NjQzMjk3MDAvOTU4NWZkYWU5MmFmNDVmMTEzZmRjYzlmNmM0YmE0NDIvNzIwcF9zdHJlYW0ubTN1OA==";
-                        break;
-                    case 'tennis':
-                        encodedUrl = "aHR0cHM6Ly9yaXZlci01LTU0OC5ydGJjZG4ucnUvc3RyZWFtL2dlbmV0dGEtNTE5Lm9zdC5ydHViZS5ydS96bmZKUUptRk01Y2RyQWRBTU1SVnNRLzE3NjQzMjk3MzYvNWY1ZGM5ZDY0YjQzZGZjNzQwZTkyZjJiZGYyYjBkMzgvNzIwcF9zdHJlYW0ubTN1OA==";
-                        break;
-                    case 'nba':
-                        encodedUrl = "aHR0cHM6Ly9yaXZlci00LTQyMS5ydGJjZG4ucnUvc3RyZWFtL2dlbmV0dGEtMzA0Lm05LnJ1dHViZS5ydS9RT3I4WkNiSlhWRW5VQWRRQ0xBMGtRLzE3NjQxNzU4NzQvZDAxMjQxZTlmZDJiYzJkNjVkYmY2ZDc0Y2NhMDJmODkvNTc2cF9zdHJlYW0ubTN1OA==";
-                        break;
-                    case 'match_tv2':
-                        encodedUrl = "aHR0cHM6Ly9yaXZlci0xLnJ1dHViZS5ydS9zdHJlYW0vZ2VuZXR0YS0zMTMubTkucnV0dWJlLnJ1L1lZOEN2YXpFYUczZ0dVMW1CMG9KdncvMTc2NDAyMzM2Mi8xMWJiYmVjNzVhMmNlYjhjZjQ0NmFkMTY4MTNjNmVlYy8xMDgwcF9zdHJlYW0ubTN1OA==";
-                        break;
-                    default:
-                        encodedUrl = "aHR0cHM6Ly9yaXZlci0xLnJ1dHViZS5ydS9zdHJlYW0vZ2VuZXR0YS01MDMub3N0LnJ1dHViZS5ydS9mOEo3cWJSZVJoTzFidWRIc2dnV1hRLzE3NjQzMjk1ODkvZTViYWNhYzNiOGU3MzA3OTFkNGNhYjIwYWU4MWNkOGYvNzIwcF9zdHJlYW0ubTN1OA==";
-                }
-
-                return {
-                    name: channel.name,
-                    encodedUrl: encodedUrl,
-                    icon: channel.icon,
-                    type: channel.type,
-                    category: channel.category
-                };
-            });
-        }
-
-        // 7. Enhanced Telegram Integration Functions
-        function openTelegramChannel() {
-            const channelUrl = 'https://t.me/livefootball671';
-            window.open(channelUrl, '_blank');
-            showToast('📢 Opening @livefootball671 channel...', 'info');
-        }
-
-        function openStreamBot() {
-            const botUrl = 'https://t.me/streamer671_bot';
-            window.open(botUrl, '_blank');
-            showToast('🤖 Opening @streamer671_bot...', 'info');
-        }
-
-        function openInTelegram() {
-            openStreamBot();
-        }
-
-        // 8. Enhanced Android & Laptops Function with dynamic behavior
-        function openAndroidLaptops() {
-            // Check if we're in WebView
-            if (isWebView()) {
-                // In WebView, redirect to Mini App
-                showToast('🔄 Redirecting to Mini App...', 'info');
-                // This would typically use a deep link to open the Telegram Mini App
-                // For demo purposes, we'll just show an alert
-                alert('In a real implementation, this would open the Mini App in Telegram');
-                return;
-            }
-            
-            // Obfuscated URL - Base64 encoded
-            const base64Url = "aHR0cHM6Ly9hbm9sZDY3MS5naXRodWIuaW8vdGVsZS1hcHAv";
-            const actualUrl = atob(base64Url);
-            
-            // Open in new tab
-            const newWindow = window.open(actualUrl, '_blank');
-            
-            if (newWindow) {
-                showToast('🚀 Opening Android & Laptops version...', 'success');
-                // Try to blur the address bar
-                try {
-                    newWindow.blur();
-                    window.focus();
-                } catch (e) {}
-            } else {
-                // Show instructions without revealing the actual URL
-                showAndroidLaptopsInstructions();
-            }
-        }
-
-        function showAndroidLaptopsInstructions() {
-            alert(`🚀 Android & Laptops Version
-
-For the complete streaming experience with fullscreen support:
-
-1. The Android & Laptops version will open automatically
-2. If it doesn't open, please allow pop-ups
-3. For best experience, use on Android devices or laptops
-
-Features:
-• True fullscreen support
-• Better video performance
-• Enhanced streaming features
-• Optimized for mobile and desktop
-
-📢 Updates: @livefootball671
-🤖 Source: @streamer671_bot
-
-Enjoy uninterrupted streaming!`);
-        }
-
-        // ================= ENHANCED MAIN APP LOGIC =================
-        
-        let tg = null;
-        let channelsList = [];
-        let activeFilter = 'all';
-        const allChannelsContainer = document.getElementById("allChannelsContainer");
-        const channelFilter = document.getElementById("channelFilter");
-        const fullscreenOverlay = document.getElementById("fullscreenOverlay");
-        const fullscreenVideo = document.getElementById("fullscreenVideo");
-        const fullscreenTitle = document.getElementById("fullscreenTitle");
-        const securityOverlay = document.getElementById("securityOverlay");
-        const appContent = document.getElementById("appContent");
-        const loadingOverlay = document.getElementById("loadingOverlay");
-        const deviceInfo = document.getElementById("deviceInfo");
-        const androidLaptopBtn = document.getElementById("androidLaptopBtn");
-        const androidLaptopBtn2 = document.getElementById("androidLaptopBtn2");
-
-        // Enhanced device detection
-        function detectDevice() {
-            const userAgent = navigator.userAgent.toLowerCase();
-            let deviceType = 'Unknown Device';
-            let deviceIcon = '📱';
-            
-            if (userAgent.includes('android')) {
-                deviceType = 'Android Device';
-                deviceIcon = '📱';
-            } else if (userAgent.includes('iphone') || userAgent.includes('ipad')) {
-                deviceType = 'iOS Device';
-                deviceIcon = '📱';
-            } else if (userAgent.includes('windows')) {
-                deviceType = 'Windows PC';
-                deviceIcon = '💻';
-            } else if (userAgent.includes('macintosh')) {
-                deviceType = 'Mac';
-                deviceIcon = '💻';
-            } else if (userAgent.includes('linux')) {
-                deviceType = 'Linux PC';
-                deviceIcon = '💻';
-            }
-            
-            deviceInfo.textContent = `${deviceIcon} ${deviceType}`;
-            return { type: deviceType, icon: deviceIcon };
-        }
-
-        // Initialize security and app with enhanced loading
+        // Initialize security and app
         function initializeApp() {
-            // Show loading overlay
-            loadingOverlay.classList.remove('hidden');
-            
             // Setup anti-inspection first
             setupAntiInspection();
             
@@ -960,25 +690,20 @@ Enjoy uninterrupted streaming!`);
                     tg.expand();
                 }
                 
-                // Initialize app after a short delay to ensure everything is ready
-                setTimeout(() => {
-                    // Hide security overlay and loading, show app
-                    securityOverlay.style.display = 'none';
-                    loadingOverlay.classList.add('hidden');
-                    appContent.classList.remove('hidden');
-                    
-                    // Load channels and initialize app
-                    channelsList = getChannelsData();
-                    loadChannelFilters();
-                    loadAllChannels();
-                    
-                    // Notify Telegram that the app is ready
-                    if (tg && tg.ready) {
-                        tg.ready();
-                    }
-                    
-                    showToast('App loaded successfully!', 'success');
-                }, 1000);
+                // Hide security overlay, show app
+                securityOverlay.style.display = 'none';
+                appContent.classList.remove('hidden');
+                
+                // Load channels and initialize app
+                channelsList = getChannelsData();
+                loadAllChannels();
+                
+                // Notify Telegram that the app is ready
+                if (tg && tg.ready) {
+                    tg.ready();
+                }
+                
+                showToast('App loaded successfully!', 'success');
             } else if (isWebView()) {
                 // We're in WebView - check if it's from our app
                 const referrer = document.referrer;
@@ -988,26 +713,21 @@ Enjoy uninterrupted streaming!`);
                 // Simple security check - in production, use a more robust method
                 if (secretKey === 'secure123') {
                     // Valid WebView access
-                    setTimeout(() => {
-                        securityOverlay.style.display = 'none';
-                        loadingOverlay.classList.add('hidden');
-                        appContent.classList.remove('hidden');
-                        
-                        // Change Android & Laptops button to open Mini App
-                        androidLaptopBtn.textContent = '📱 Open Mini App';
-                        androidLaptopBtn2.textContent = '📱 Open Mini App';
-                        
-                        // Load channels and initialize app
-                        channelsList = getChannelsData();
-                        loadChannelFilters();
-                        loadAllChannels();
-                        
-                        showToast('App loaded successfully!', 'success');
-                    }, 1000);
+                    securityOverlay.style.display = 'none';
+                    appContent.classList.remove('hidden');
+                    
+                    // Change Android & Laptops button to open Mini App
+                    androidLaptopBtn.textContent = '📱 Open Mini App';
+                    androidLaptopBtn2.textContent = '📱 Open Mini App';
+                    
+                    // Load channels and initialize app
+                    channelsList = getChannelsData();
+                    loadAllChannels();
+                    
+                    showToast('App loaded successfully!', 'success');
                 } else {
                     // Invalid WebView access
                     securityOverlay.style.display = 'flex';
-                    loadingOverlay.classList.add('hidden');
                     appContent.classList.add('hidden');
                     
                     // Auto-redirect to Telegram after 5 seconds
@@ -1018,7 +738,6 @@ Enjoy uninterrupted streaming!`);
             } else {
                 // Regular browser - show security message
                 securityOverlay.style.display = 'flex';
-                loadingOverlay.classList.add('hidden');
                 appContent.classList.add('hidden');
                 
                 // Auto-redirect to Telegram after 5 seconds
@@ -1028,80 +747,25 @@ Enjoy uninterrupted streaming!`);
             }
         }
 
-        // Enhanced channel filtering
-        function loadChannelFilters() {
-            // Get unique categories
-            const categories = ['all', ...new Set(channelsList.map(channel => channel.category))];
-            
-            // Create filter buttons
-            channelFilter.innerHTML = '';
-            categories.forEach(category => {
-                const button = document.createElement('button');
-                button.className = `filter-btn ${category === 'all' ? 'active' : ''}`;
-                button.textContent = category === 'all' ? 'All Channels' : getCategoryIcon(category) + ' ' + category.charAt(0).toUpperCase() + category.slice(1);
-                button.onclick = () => filterChannels(category);
-                channelFilter.appendChild(button);
-            });
-        }
-
-        function getCategoryIcon(category) {
-            const icons = {
-                'football': '⚽',
-                'racing': '🏎️',
-                'tennis': '🎾',
-                'basketball': '🏀',
-                'general': '📺'
-            };
-            return icons[category] || '📺';
-        }
-
-        function filterChannels(category) {
-            activeFilter = category;
-            
-            // Update active filter button
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                btn.classList.remove('active');
-            });
-            event.target.classList.add('active');
-            
-            // Show/hide channels based on filter
-            channelsList.forEach((channel, index) => {
-                const channelElement = document.getElementById(`channel-${index}`);
-                if (channelElement) {
-                    if (category === 'all' || channel.category === category) {
-                        channelElement.style.display = 'block';
-                    } else {
-                        channelElement.style.display = 'none';
-                    }
-                }
-            });
-            
-            showToast(`Showing ${category === 'all' ? 'all channels' : category + ' channels'}`, 'info');
-        }
-
         // Track video states for each channel
         const videoStates = [];
 
-        // Enhanced Load All Channels with lazy loading
+        // Load All Channels with their videos on page load
         function loadAllChannels() {
             allChannelsContainer.innerHTML = "";
             videoStates.length = 0; // Reset video states
             
             channelsList.forEach((channel, index) => {
-                videoStates.push({ isVisible: false, isLoading: false });
+                videoStates.push({ isVisible: false });
                 
                 const channelContainer = document.createElement("div");
                 channelContainer.className = "channel-video-container";
                 channelContainer.id = `channel-${index}`;
                 
-                // Decode the URL at runtime to prevent it from being visible in source
-                const decodedUrl = atob(channel.encodedUrl);
-                
                 channelContainer.innerHTML = `
                     <div class="channel-title">
                         <span class="channel-icon">${channel.icon}</span>
                         ${channel.name}
-                        <span style="font-size: 12px; opacity: 0.7; margin-left: auto;">${channel.category}</span>
                     </div>
                     <div class="channel-video" id="video-container-${index}">
                         <div class="video-placeholder" id="placeholder-${index}">
@@ -1113,7 +777,7 @@ Enjoy uninterrupted streaming!`);
                             id="video-${index}"
                             width="100%"
                             height="100%"
-                            src=""
+                            src="${channel.url}"
                             style="border: none;"
                             allow="clipboard-write; autoplay"
                             allowFullScreen
@@ -1129,7 +793,6 @@ Enjoy uninterrupted streaming!`);
                         <button class="hide-btn hidden" onclick="hideVideo(${index})" id="hide-btn-${index}">
                             <span>⏸️</span> Hide Video
                         </button>
-                        ${isRegularBrowser() ? '' : '<button class="fullscreen-btn" onclick="enterFullscreen(' + index + ')"><span>📺</span> Fullscreen</button>'}
                         <button class="android-laptop-btn" onclick="openAndroidLaptops()">
                             <span>${isWebView() ? '📱' : '📱💻'}</span> ${isWebView() ? 'Open Mini App' : 'Android & Laptops'}
                         </button>
@@ -1143,33 +806,25 @@ Enjoy uninterrupted streaming!`);
             });
         }
 
-        // Enhanced Show video function with loading state
+        // Show video function
         function showVideo(index) {
             const video = document.getElementById(`video-${index}`);
             const placeholder = document.getElementById(`placeholder-${index}`);
             const showBtn = document.getElementById(`show-btn-${index}`);
             const hideBtn = document.getElementById(`hide-btn-${index}`);
             
-            if (video && placeholder && !videoStates[index].isLoading) {
-                videoStates[index].isLoading = true;
-                
-                // Show loading state
-                showBtn.disabled = true;
-                showBtn.innerHTML = '<span>⏳</span> Loading...';
-                
-                // Decode URL and set source
-                const decodedUrl = atob(channelsList[index].encodedUrl);
-                video.src = decodedUrl;
-                
+            if (video && placeholder) {
                 video.classList.remove('hidden');
                 placeholder.classList.add('hidden');
                 videoStates[index].isVisible = true;
                 
-                showToast(`Loading ${channelsList[index].name}...`, 'info');
+                // Update button visibility
+                showBtn.classList.add('hidden');
+                hideBtn.classList.remove('hidden');
             }
         }
 
-        // Enhanced Hide video function
+        // Hide video function
         function hideVideo(index) {
             const video = document.getElementById(`video-${index}`);
             const placeholder = document.getElementById(`placeholder-${index}`);
@@ -1183,82 +838,14 @@ Enjoy uninterrupted streaming!`);
                 
                 // Update button visibility
                 showBtn.classList.remove('hidden');
-                showBtn.disabled = false;
-                showBtn.innerHTML = '<span>▶️</span> Show Video';
                 hideBtn.classList.add('hidden');
-                
-                // Stop the video to save resources
-                video.src = '';
             }
         }
 
-        // Enhanced Enter fullscreen mode
-        function enterFullscreen(index) {
-            const channel = channelsList[index];
-            // Decode the URL at runtime
-            const videoUrl = atob(channel.encodedUrl);
-            
-            // Set fullscreen video source and title
-            fullscreenVideo.src = videoUrl;
-            fullscreenTitle.textContent = channel.name;
-            
-            // Show fullscreen overlay
-            fullscreenOverlay.style.display = 'flex';
-            
-            // Hide Telegram header in fullscreen if possible
-            if (tg && tg.showHeader) {
-                tg.showHeader(false);
-            }
-            
-            // Lock orientation if possible
-            lockOrientation();
-            
-            showToast(`Entering fullscreen: ${channel.name}`, 'info');
-        }
-
-        // Enhanced Exit fullscreen mode
-        function exitFullscreen() {
-            // Hide fullscreen overlay
-            fullscreenOverlay.style.display = 'none';
-            
-            // Stop the video
-            fullscreenVideo.src = '';
-            
-            // Show Telegram header again
-            if (tg && tg.showHeader) {
-                tg.showHeader(true);
-            }
-            
-            // Unlock orientation
-            unlockOrientation();
-            
-            showToast('Exited fullscreen', 'info');
-        }
-
-        // Lock screen orientation to landscape for fullscreen
-        function lockOrientation() {
-            if (screen.orientation && screen.orientation.lock) {
-                screen.orientation.lock('landscape').catch(error => {
-                    console.log('Orientation lock not supported:', error);
-                });
-            }
-        }
-
-        // Unlock screen orientation
-        function unlockOrientation() {
-            if (screen.orientation && screen.orientation.unlock) {
-                screen.orientation.unlock();
-            }
-        }
-
-        // Enhanced Handle video load event
+        // Handle video load event
         function handleVideoLoad(index) {
             const placeholder = document.getElementById(`placeholder-${index}`);
             const video = document.getElementById(`video-${index}`);
-            const showBtn = document.getElementById(`show-btn-${index}`);
-            const hideBtn = document.getElementById(`hide-btn-${index}`);
-            
-            videoStates[index].isLoading = false;
             
             if (placeholder) {
                 placeholder.classList.add('hidden');
@@ -1268,6 +855,8 @@ Enjoy uninterrupted streaming!`);
                 videoStates[index].isVisible = true;
                 
                 // Update button visibility
+                const showBtn = document.getElementById(`show-btn-${index}`);
+                const hideBtn = document.getElementById(`hide-btn-${index}`);
                 if (showBtn && hideBtn) {
                     showBtn.classList.add('hidden');
                     hideBtn.classList.remove('hidden');
@@ -1277,12 +866,9 @@ Enjoy uninterrupted streaming!`);
             showToast(`${channelsList[index].name} loaded successfully!`, 'success');
         }
 
-        // Enhanced Handle video error event
+        // Handle video error event
         function handleVideoError(index) {
             const placeholder = document.getElementById(`placeholder-${index}`);
-            const showBtn = document.getElementById(`show-btn-${index}`);
-            
-            videoStates[index].isLoading = false;
             
             if (placeholder) {
                 placeholder.innerHTML = `
@@ -1296,15 +882,10 @@ Enjoy uninterrupted streaming!`);
                 placeholder.classList.add('video-error');
             }
             
-            if (showBtn) {
-                showBtn.disabled = false;
-                showBtn.innerHTML = '<span>▶️</span> Show Video';
-            }
-            
             showToast(`Failed to load ${channelsList[index].name}`, 'error');
         }
 
-        // Enhanced Reload video stream
+        // Reload video stream
         function reloadVideo(index) {
             const video = document.getElementById(`video-${index}`);
             const placeholder = document.getElementById(`placeholder-${index}`);
@@ -1324,49 +905,37 @@ Enjoy uninterrupted streaming!`);
                 
                 // Reset button states
                 showBtn.classList.remove('hidden');
-                showBtn.disabled = false;
-                showBtn.innerHTML = '<span>▶️</span> Show Video';
                 hideBtn.classList.add('hidden');
                 videoStates[index].isVisible = false;
-                videoStates[index].isLoading = false;
                 
                 // Force reload by updating src
-                const decodedUrl = atob(channelsList[index].encodedUrl);
+                const currentSrc = video.src;
                 video.src = '';
                 setTimeout(() => {
-                    video.src = decodedUrl;
+                    video.src = currentSrc;
                 }, 100);
                 
                 showToast(`Reloading ${channelsList[index].name}...`, 'info');
             }
         }
 
-        // Handle escape key to exit fullscreen
-        document.addEventListener('keydown', function(event) {
-            if (event.key === 'Escape' && fullscreenOverlay.style.display === 'flex') {
-                exitFullscreen();
-            }
-        });
-
-        // Enhanced Original Functions
+        // Original Functions
         function showAlert() {
             alert(`Welcome to Live Sports Channels!
 
-🔒 ENHANCED SECURITY FEATURES:
-• Advanced Telegram-only access
+🔒 SECURITY FEATURES:
+• Telegram-only access
 • Anti-inspection protection  
 • Source code obfuscation
 • Enhanced security overlay
-• Console access monitoring
 
 🎯 TWO VERSIONS AVAILABLE:
 • Mini App: Quick preview in Telegram
-• Android & Laptops: Complete experience with fullscreen
+• Android & Laptops: Complete experience with enhanced features
 
 🚀 ANDROID & LAPTOPS FEATURES:
-• True fullscreen support
-• Better video performance
 • Enhanced streaming features
+• Better video performance
 • Optimized for mobile and desktop
 
 📢 OUR CHANNEL: @livefootball671
@@ -1390,7 +959,7 @@ Enjoy uninterrupted streaming!`);
             }
         }
         
-        // Initialize the app with enhanced security
+        // Initialize the app with security
         document.addEventListener('DOMContentLoaded', initializeApp);
     </script>
 </body>
