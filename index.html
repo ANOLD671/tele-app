@@ -384,10 +384,10 @@
                     </button>
                 </div>
                 <div class="android-laptops-info">
-                    <strong>🚀 Android & Laptops Version</strong>
+                    <strong>🚀 Android </strong>
                     <p style="margin: 5px 0; font-size: 14px;">For enhanced features and better performance</p>
                     <button class="android-laptop-btn" id="androidLaptopBtn" onclick="openAndroidLaptops()" style="margin: 5px 0;">
-                        📱💻 Android & Laptops
+                        📱💻 Android 
                     </button>
                 </div>
             </div>
@@ -414,13 +414,13 @@
 
             <!-- Android & Laptops Button Section -->
             <div class="card">
-                <h3>🚀 Android & Laptops Version</h3>
+                <h3>🚀 Android </h3>
                 <p>For the complete experience with enhanced features:</p>
                 <button class="android-laptop-btn" id="androidLaptopBtn2" onclick="openAndroidLaptops()">
-                    📱💻 Android & Laptops
+                    📱💻 Android 
                 </button>
                 <p style="margin-top: 10px; font-size: 12px; opacity: 0.7;">
-                    Optimized for Android devices and laptops
+                    Optimized for Android devices 
                 </p>
             </div>
             
@@ -633,7 +633,7 @@
             const newWindow = window.open(actualUrl, '_blank');
             
             if (newWindow) {
-                showToast('🚀 Opening Android & Laptops version...', 'success');
+                showToast('🚀 Opening Android  version...', 'success');
                 // Try to blur the address bar
                 try {
                     newWindow.blur();
@@ -646,7 +646,7 @@
         }
 
         function showAndroidLaptopsInstructions() {
-            alert(`🚀 Android & Laptops Version
+            alert(`🚀 Android 
 
 For the complete streaming experience with enhanced features:
 
@@ -723,13 +723,60 @@ Enjoy uninterrupted streaming!`);
             // Setup anti-inspection first
             setupAntiInspection();
             
+            // ===== ADDED: PREVENT SWIPE-TO-CLOSE FUNCTIONALITY =====
+            // Check if we're in Telegram WebApp
+            if (window.Telegram && window.Telegram.WebApp) {
+                tg = window.Telegram.WebApp;
+                
+                // 1. Disable the default swipe-down to close behavior
+                tg.disableClosingConfirmation();
+                
+                // 2. Show the back button (it will act as our close button)
+                tg.BackButton.show();
+                
+                // 3. Handle when user clicks the back button
+                tg.onEvent('backButtonClicked', function() {
+                    // Show confirmation dialog when back button is clicked
+                    tg.showConfirm(
+                        'Close Mini App?',
+                        'Are you sure you want to close the application?',
+                        function(confirmed) {
+                            if (confirmed) {
+                                tg.close();
+                            } else {
+                                // User cancelled - keep the back button visible
+                                tg.BackButton.show();
+                            }
+                        }
+                    );
+                });
+                
+                // 4. Handle browser's beforeunload event (optional extra protection)
+                window.addEventListener('beforeunload', function(e) {
+                    if (!window.confirmClose) {
+                        e.preventDefault();
+                        e.returnValue = '';
+                        tg.showConfirm(
+                            'Close Mini App?',
+                            'Are you sure you want to close the application?',
+                            function(confirmed) {
+                                if (confirmed) {
+                                    window.confirmClose = true;
+                                    tg.close();
+                                }
+                            }
+                        );
+                    }
+                });
+            }
+            // ===== END OF ADDED SECTION =====
+            
             // Detect device
             detectDevice();
             
             // Check if we're in Telegram
             if (isTelegramWebApp()) {
                 // We're in Telegram - initialize WebApp
-                tg = window.Telegram.WebApp;
                 if (tg && tg.expand) {
                     tg.expand();
                 }
@@ -975,9 +1022,9 @@ Enjoy uninterrupted streaming!`);
 
 🎯 TWO VERSIONS AVAILABLE:
 • Mini App: Quick preview in Telegram
-• Android & Laptops: Complete experience with enhanced features
+• Android : Complete experience with enhanced features
 
-🚀 ANDROID & LAPTOPS FEATURES:
+🚀 ANDROID FEATURES:
 • Enhanced streaming features
 • Better video performance
 • Optimized for mobile and desktop
@@ -985,7 +1032,7 @@ Enjoy uninterrupted streaming!`);
 📢 OUR CHANNEL: @livefootball671
 🤖 STREAM SOURCE: @streamer671_bot
 
-💡 Use "Android & Laptops" button for the best experience!`);
+💡 Use "Android " button for the best experience!`);
         }
         
         function changeBackground() {
@@ -996,10 +1043,28 @@ Enjoy uninterrupted streaming!`);
         }
         
         function closeApp() {
-            if (tg && tg.close) {
+            // Check if we're in Telegram
+            if (window.Telegram && window.Telegram.WebApp) {
+                const tg = window.Telegram.WebApp;
+                
+                // Show confirmation before closing
+                tg.showConfirm(
+                    'Close Mini App?',
+                    'Are you sure you want to close the application?',
+                    function(confirmed) {
+                        if (confirmed) {
+                            tg.close();
+                        }
+                    }
+                );
+            } else if (tg && tg.close) {
+                // Fallback for older Telegram WebApp API
                 tg.close();
             } else {
-                alert('App would close now. In a real Telegram Web App, this would close the application.');
+                // For testing outside Telegram
+                if (confirm('Are you sure you want to close the app?')) {
+                    alert('App would close now. In a real Telegram Web App, this would close the application.');
+                }
             }
         }
         
