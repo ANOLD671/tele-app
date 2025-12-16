@@ -242,6 +242,57 @@
             margin: 10px 0;
         }
         
+        /* Custom Close Confirmation Modal */
+        .custom-confirm-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(5px);
+        }
+        
+        .custom-confirm-content {
+            background: #2a2a3e;
+            padding: 25px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 350px;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+        
+        .custom-confirm-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .custom-confirm-buttons button {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+        }
+        
+        .custom-confirm-cancel {
+            background: #444;
+            color: white;
+        }
+        
+        .custom-confirm-ok {
+            background: #ff416c;
+            color: white;
+        }
+        
         @keyframes pulse {
             0% { opacity: 1; }
             50% { opacity: 0.5; }
@@ -340,9 +391,31 @@
         .toast.warning {
             background: #FF9800;
         }
+        
+        /* Prevent swipe on touch devices */
+        .prevent-swipe {
+            touch-action: pan-y;
+            -webkit-overflow-scrolling: touch;
+            overflow: hidden;
+            position: fixed;
+            width: 100%;
+            height: 100%;
+        }
     </style>
 </head>
-<body class="no-context" oncontextmenu="return false">
+<body class="no-context prevent-swipe" oncontextmenu="return false">
+    <!-- Custom Close Confirmation Modal -->
+    <div id="customConfirmModal" class="custom-confirm-modal hidden">
+        <div class="custom-confirm-content">
+            <h3 style="margin-bottom: 15px; color: white;">Close Mini App?</h3>
+            <p style="color: #ccc; margin-bottom: 20px;">Are you sure you want to close the application?</p>
+            <div class="custom-confirm-buttons">
+                <button id="customConfirmCancel" class="custom-confirm-cancel">Cancel</button>
+                <button id="customConfirmOk" class="custom-confirm-ok">Close</button>
+            </div>
+        </div>
+    </div>
+
     <!-- Security Overlay - Shows when not in Telegram -->
     <div id="securityOverlay" class="security-overlay">
         <div class="security-message">
@@ -723,63 +796,22 @@ Enjoy uninterrupted streaming!`);
             // Setup anti-inspection first
             setupAntiInspection();
             
-            // ===== ADDED: PREVENT SWIPE-TO-CLOSE FUNCTIONALITY =====
-            // Check if we're in Telegram WebApp
-            if (window.Telegram && window.Telegram.WebApp) {
-                tg = window.Telegram.WebApp;
-                
-                // 1. Disable the default swipe-down to close behavior
-                tg.disableClosingConfirmation();
-                
-                // 2. Show the back button (it will act as our close button)
-                tg.BackButton.show();
-                
-                // 3. Handle when user clicks the back button
-                tg.onEvent('backButtonClicked', function() {
-                    // Show confirmation dialog when back button is clicked
-                    tg.showConfirm(
-                        'Close Mini App?',
-                        'Are you sure you want to close the application?',
-                        function(confirmed) {
-                            if (confirmed) {
-                                tg.close();
-                            } else {
-                                // User cancelled - keep the back button visible
-                                tg.BackButton.show();
-                            }
-                        }
-                    );
-                });
-                
-                // 4. Handle browser's beforeunload event (optional extra protection)
-                window.addEventListener('beforeunload', function(e) {
-                    if (!window.confirmClose) {
-                        e.preventDefault();
-                        e.returnValue = '';
-                        tg.showConfirm(
-                            'Close Mini App?',
-                            'Are you sure you want to close the application?',
-                            function(confirmed) {
-                                if (confirmed) {
-                                    window.confirmClose = true;
-                                    tg.close();
-                                }
-                            }
-                        );
-                    }
-                });
-            }
-            // ===== END OF ADDED SECTION =====
-            
             // Detect device
             detectDevice();
             
             // Check if we're in Telegram
             if (isTelegramWebApp()) {
                 // We're in Telegram - initialize WebApp
+                tg = window.Telegram.WebApp;
+                
+                // ===== FIXED: COMPREHENSIVE SWIPE-TO-CLOSE PREVENTION =====
+                // 1. Always expand the app to full screen
                 if (tg && tg.expand) {
                     tg.expand();
                 }
+                
+                // 2. Set up multiple layers of protection
+                setupSwipePrevention();
                 
                 // Hide security overlay, show app
                 securityOverlay.style.display = 'none';
@@ -836,6 +868,127 @@ Enjoy uninterrupted streaming!`);
                     openStreamBot();
                 }, 5000);
             }
+        }
+
+        // ===== FIXED FUNCTION: Setup comprehensive swipe prevention =====
+        function setupSwipePrevention() {
+            if (!tg) return;
+            
+            // Layer 1: Disable closing confirmation (works on some devices)
+            tg.disableClosingConfirmation();
+            
+            // Layer 2: Show back button and handle it
+            tg.BackButton.show();
+            
+            // Layer 3: Handle back button click with custom confirmation
+            tg.onEvent('backButtonClicked', function() {
+                showCustomConfirm();
+            });
+            
+            // Layer 4: Prevent touch events that might trigger swipe
+            preventTouchSwipes();
+            
+            // Layer 5: Handle beforeunload
+            window.addEventListener('beforeunload', function(e) {
+                if (!window.isConfirmedClose) {
+                    e.preventDefault();
+                    e.returnValue = '';
+                    showCustomConfirm();
+                }
+            });
+            
+            // Layer 6: Check platform and apply platform-specific fixes
+            const userAgent = navigator.userAgent.toLowerCase();
+            
+            // iOS specific fixes
+            if (userAgent.includes('iphone') || userAgent.includes('ipad')) {
+                setupIOSPrevention();
+            }
+            
+            // Android specific fixes
+            if (userAgent.includes('android')) {
+                setupAndroidPrevention();
+            }
+            
+            showToast('Swipe-to-close protection enabled', 'info');
+        }
+
+        // Prevent touch swipes
+        function preventTouchSwipes() {
+            let startY;
+            const threshold = 100; // Minimum swipe distance
+            
+            document.addEventListener('touchstart', function(e) {
+                startY = e.touches[0].clientY;
+            }, { passive: true });
+            
+            document.addEventListener('touchmove', function(e) {
+                if (!startY) return;
+                
+                const currentY = e.touches[0].clientY;
+                const diffY = currentY - startY;
+                
+                // If swiping down from top, prevent it
+                if (diffY > threshold && startY < 50) {
+                    e.preventDefault();
+                    showToast('Use the close button to exit', 'warning');
+                    startY = null;
+                }
+            }, { passive: false });
+            
+            document.addEventListener('touchend', function() {
+                startY = null;
+            });
+        }
+
+        // iOS specific prevention
+        function setupIOSPrevention() {
+            // Prevent elastic bounce effect
+            document.body.style.overscrollBehavior = 'none';
+            document.body.style.webkitOverflowScrolling = 'touch';
+            
+            // Add extra padding at top to make swiping harder
+            document.body.style.paddingTop = 'env(safe-area-inset-top, 20px)';
+        }
+
+        // Android specific prevention
+        function setupAndroidPrevention() {
+            // Disable pull-to-refresh and other gestures
+            document.body.style.overscrollBehavior = 'none';
+            
+            // Additional event listeners for Android
+            document.addEventListener('gesturestart', function(e) {
+                e.preventDefault();
+            });
+            
+            document.addEventListener('gesturechange', function(e) {
+                e.preventDefault();
+            });
+            
+            document.addEventListener('gestureend', function(e) {
+                e.preventDefault();
+            });
+        }
+
+        // Custom confirmation modal
+        function showCustomConfirm() {
+            const modal = document.getElementById('customConfirmModal');
+            modal.classList.remove('hidden');
+            
+            document.getElementById('customConfirmCancel').onclick = function() {
+                modal.classList.add('hidden');
+                if (tg && tg.BackButton) {
+                    tg.BackButton.show();
+                }
+            };
+            
+            document.getElementById('customConfirmOk').onclick = function() {
+                window.isConfirmedClose = true;
+                modal.classList.add('hidden');
+                if (tg && tg.close) {
+                    tg.close();
+                }
+            };
         }
 
         // Track video states for each channel
@@ -1043,29 +1196,8 @@ Enjoy uninterrupted streaming!`);
         }
         
         function closeApp() {
-            // Check if we're in Telegram
-            if (window.Telegram && window.Telegram.WebApp) {
-                const tg = window.Telegram.WebApp;
-                
-                // Show confirmation before closing
-                tg.showConfirm(
-                    'Close Mini App?',
-                    'Are you sure you want to close the application?',
-                    function(confirmed) {
-                        if (confirmed) {
-                            tg.close();
-                        }
-                    }
-                );
-            } else if (tg && tg.close) {
-                // Fallback for older Telegram WebApp API
-                tg.close();
-            } else {
-                // For testing outside Telegram
-                if (confirm('Are you sure you want to close the app?')) {
-                    alert('App would close now. In a real Telegram Web App, this would close the application.');
-                }
-            }
+            // Show custom confirmation
+            showCustomConfirm();
         }
         
         // Initialize the app with security
